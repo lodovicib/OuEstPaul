@@ -1,8 +1,17 @@
 package com.example.clement.ouestpaul;
 
+import android.content.Context;
+import android.hardware.SensorManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -17,6 +26,11 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+      //  SensorManager sensor = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+       // LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+       // Criteria critere = new Criteria();
+       // critere.setAccuracy(Criteria.ACCURACY_HIGH);
+      // Log.d("test", "locationManager :" + locationManager.toString());
     }
 
     @Override
@@ -60,6 +74,14 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Criteria critere = new Criteria();
+        //critere.setAccuracy(Criteria.ACCURACY_HIGH);
+        //locationManager.getBestProvider(critere, true);
+         //Log.d("test", "locationManager :" + locationManager.getLastKnownLocation("gps"));
+        MyLocationOverlay loc = new MyLocationOverlay(locationManager.getLastKnownLocation("gps"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Vous êtes ici"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15.0f));
+
     }
 }
