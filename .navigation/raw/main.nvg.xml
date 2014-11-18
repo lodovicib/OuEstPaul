@@ -5,15 +5,40 @@
     class = "java.util.ArrayList">
     <entry>
       <key      
-        class = "com.android.navigation.ActivityState"      
-        className = "com.example.clement.ouestpaul.MapsActivity">
+        class = "com.android.navigation.MenuState"      
+        xmlResourceName = "search">
         <location        
+          id = "point0"        
           x = "0"        
           y = "0"/>
       </key>
       <value      
-        x = "480"      
+        x = "640"      
+        y = "1600"      
+        class = "com.android.navigation.Point"/>
+    </entry>
+    <entry>
+      <key      
+        class = "com.android.navigation.ActivityState"      
+        className = "com.example.clement.ouestpaul.activity.MapsActivity">
+        <location        
+          idref = "point0"/>
+      </key>
+      <value      
+        x = "160"      
         y = "0"      
+        class = "com.android.navigation.Point"/>
+    </entry>
+    <entry>
+      <key      
+        class = "com.android.navigation.ActivityState"      
+        className = "com.example.clement.ouestpaul.Search">
+        <location        
+          idref = "point0"/>
+      </key>
+      <value      
+        x = "1440"      
+        y = "1440"      
         class = "com.android.navigation.Point"/>
     </entry>
   </locations>

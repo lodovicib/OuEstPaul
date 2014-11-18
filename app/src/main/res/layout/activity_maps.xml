@@ -1,7 +1,64 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/map"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".MapsActivity"
-    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+    android:background="#32292a">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Carte"
+        android:id="@+id/button_carte"
+        android:textStyle="bold"
+        android:gravity="center_vertical|center_horizontal"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+        android:background="@color/abc_search_url_text_pressed"
+        android:minWidth="100dp"
+        android:layout_alignParentStart="false"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_map"
+        android:height="@dimen/abc_action_bar_progress_bar_size"
+        android:hint="@string/abc_action_bar_home_description"
+        android:gravity="center_vertical|center_horizontal"
+        android:fontFamily="@string/abc_action_bar_home_description"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:theme="@style/TextAppearance.AppCompat.Base.CompactMenu.Dialog"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recherche"
+        android:id="@+id/button_recherche"
+        android:textStyle="bold"
+        android:gravity="center_vertical|center_horizontal"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+        android:background="#fff0a464"
+        android:enabled="true"
+        android:minWidth="100dp"
+        android:onClick="onClick_button_Recherche"
+        android:focusable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/map" />
+
+
+    <fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:tag="Google_Map"
+        android:layout_above="@+id/header"
+        android:layout_below="@+id/button_recherche" />
+
+</RelativeLayout>
