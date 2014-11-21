@@ -1,4 +1,4 @@
-package com.example.clement.ouestpaul;
+package com.example.clement.ouestpaul.location;
 
 import android.location.Location;
 import android.location.LocationListener;

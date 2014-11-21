@@ -10,7 +10,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Carte"
+        android:text="Y aller"
         android:id="@+id/button_carte"
         android:textStyle="bold"
         android:gravity="center_vertical|center_horizontal"
@@ -18,7 +18,9 @@
         android:background="@color/abc_search_url_text_pressed"
         android:minWidth="100dp"
         android:layout_alignParentStart="false"
-        android:enabled="false" />
+        android:enabled="false"
+        android:clickable="true"
+        android:onClick="onClick_button_Carte" />
 
     <TextView
         android:id="@+id/header"
@@ -49,7 +51,8 @@
         android:onClick="onClick_button_Recherche"
         android:focusable="false"
         android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/map" />
+        android:layout_alignEnd="@+id/map"
+        android:clickable="true" />
 
 
     <fragment
@@ -60,5 +63,50 @@
     android:tag="Google_Map"
         android:layout_above="@+id/header"
         android:layout_below="@+id/button_recherche" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pieton"
+        android:id="@+id/button_pieton"
+        android:layout_below="@+id/button_carte"
+        android:layout_alignParentStart="true"
+        android:enabled="true"
+        android:background="#ff694229"
+        android:textColor="#ffffffff"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:onClick="onClick_button_SousCarte" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vélo"
+        android:id="@+id/button_velo"
+        android:enabled="true"
+        android:background="#ff694229"
+        android:textColor="#ffffffff"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:onClick="onClick_button_SousCarte"
+        android:layout_below="@+id/button_carte"
+        android:layout_alignStart="@+id/header" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voiture"
+        android:id="@+id/button_voiture"
+        android:enabled="true"
+        android:background="#ff694229"
+        android:textColor="#ffffffff"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:onClick="onClick_button_SousCarte"
+        android:layout_alignTop="@+id/map"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
