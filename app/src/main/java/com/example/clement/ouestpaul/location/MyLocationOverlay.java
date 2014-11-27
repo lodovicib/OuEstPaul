@@ -53,7 +53,8 @@ Location location;
                     default:
                         break;
                 }
-                Toast.makeText(mMapActivity, buf, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, buf.toString());
+                //Toast.makeText(mMapActivity, buf, Toast.LENGTH_SHORT).show();
             }
 
             @Override

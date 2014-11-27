@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 
-import com.example.clement.ouestpaul.JSONParser;
 import com.example.clement.ouestpaul.search.ArrayResultsSearchAdaptater;
 import com.example.clement.ouestpaul.lieux.Lieu;
 import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
@@ -28,21 +25,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-//import com.google.gson.Gson;
+import com.google.gson.Gson;
 
 
 import javax.xml.transform.Result;
 
-public class SearchActivity extends Activity implements LieuAdapterListener {
+public class SearchActivity extends Activity implements LieuAdapterListener, SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener {
  //   private LinkedList<Lieu> lieux;
 //URL to get JSON Array
-/* private static String url = "http://geojson.io/#id=gist:icocarto/e9251880dc7b7626258a&map=15/43.5603/1.4703";
+/* private static String url = "https://gist.github.com/icocarto/e9251880dc7b7626258a";
     //JSON Node Names
     private static final String TAG_FEATURE = "features";
     private static final String TAG_ID = "ID";
@@ -51,7 +52,7 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
     private static final String TAG_LAT = "Y";
 */
     private ListView listResultats;
-    private EditText editRecherche;
+    private SearchView editRecherche;
    // Map<String, String> hashMapResultats;
    // List<Map<String, String>> myMapList = new ArrayList<Map<String, String>>();
     private RechercheLieu listeLieux;
@@ -59,30 +60,62 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
     ArrayResultsSearchAdaptater adaptater;
     private final static int ID_FAVORIS_DIALOG = 0;
     Dialog box = null;
-//    JSONArray user = null;
+ //  JSONArray user = null;
 
-   public void addCharDansLeChampDeRecherche(char c) {
+/*   public void addCharDansLeChampDeRecherche(char c) {
         editRecherche.setText(c);
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+ /*       StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        HttpURLConnection con = null ;
+        InputStream is = null;
 
-/*        InputStream source = retrieveStream(url);
+        try {
+            con = (HttpURLConnection) ( new URL(url)).openConnection();
+            con.setRequestMethod("GET");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.connect();
+            Log.d("test", "Location reçue dans la boucle: je test json");
+            // Let's read the response
+            StringBuffer buffer = new StringBuffer();
+            is = con.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line = null;
+            while (  (line = br.readLine()) != null )
+                buffer.append(line + "\r\n");
+
+            is.close();
+            con.disconnect();
+            Log.d("test", "Location reçue dans la boucle: je test json :" + buffer.toString());
+        }
+        catch(Throwable t) {
+            Log.d("test", "Location reçue dans la boucle: je test json"+t);
+            t.printStackTrace();
+        }
+        finally {
+            try { is.close(); } catch(Throwable t) {}
+            try { con.disconnect(); } catch(Throwable t) {}
+        }
+*/
+ /*       InputStream source = retrieveStream(url);
         Gson gson = new Gson();
         Reader reader = new InputStreamReader(source);
-        SearchResponse response = gson.fromJson(reader, SearchResponse.class);
+        //SearchResponse response = gson.fromJson(reader, SearchResponse.class);
        // Toast.makeText(this, response.query, Toast.LENGTH_SHORT).show();
-        List<Result> results = response.results;
-        for (Result result : results) {
+        //List<Result> results = response.results;
+        //for (Result result : results) {
            // Toast.makeText(this, result.fromUser, Toast.LENGTH_SHORT).show();
-        }
+        //}
 
-*/
+
         // Creating new JSON Parser
-     /*   JSONParser jParser = new JSONParser();
+ /*       JSONParser jParser = new JSONParser();
         // Getting JSON from URL
 
         JSONObject json = jParser.getJSONFromUrl(url);
@@ -102,29 +135,16 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
             e.printStackTrace();
         }*/
         listeLieux = new RechercheLieu();
-        editRecherche = (EditText) findViewById(R.id.searchView);
+        editRecherche = (SearchView) findViewById(R.id.searchView);
+        editRecherche.setOnQueryTextListener( this);
+        editRecherche.setOnCloseListener(this);
+
         //Typeface font = Typeface.createFromAsset(getAssets(),
           //      "Strato-linked.ttf");
         //TextView tv = (TextView) findViewById(R.id.searchView);
         //tv.setTypeface(font);
 
-       /* ((ListView)findViewById(R.id.searchView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView arg0, View v, int position, long id) {
-                // Nous définissons notre intent en lui disant quelle classe il faut utiliser
-                Intent detail_article= new Intent(getApplicationContext(),MapsActivity.class);
-                // On lui transmet des paramètres, ici la position de l'entry du  feed que l'on voudra ouvrir
-                // On peut passer tous les types primitifs (long, int , boolean)
-                detail_article.putExtra("title", getTitle());
-
-                // On démarre l'activity
-                startActivity(detail_article);
-                // On ferme l'activity en cours
-                finish();
-            }
-        }); */
-
-        editRecherche.addTextChangedListener(new TextWatcher() {
+        /*editRecherche.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(final CharSequence s,
                                       final int start, final int before,
@@ -151,8 +171,9 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
                                           final int after) {
 
             }
-        });
+        });*/
         this.listResultats = (ListView) findViewById(R.id.listView);
+
     }
 
     // fonction de recherche
@@ -173,6 +194,7 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
             }
 */
         }
+       // Log.d("test", "Location reçue dans la boucle: test query text change :"+result.size());
         adaptater = new ArrayResultsSearchAdaptater(
                 this.getBaseContext(), result,
                 R.layout.affichage_item,
@@ -207,15 +229,17 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
         bundle.putSerializable("result",item);
         mIntent.putExtras(bundle);
         setResult(1,mIntent);
-        Log.d("test", "Location reçue dans la boucle: je suis dans search "+item.getCoordonnee().toString());
+       // Log.d("test", "Location reçue dans la boucle: je suis dans search "+item.getCoordonnee().toString());
         finish();
     }
 
     private InputStream retrieveStream(String url) {
         DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet getRequest = new HttpGet(url);
+        HttpGet getRequest = new HttpGet("http://api.openweathermap.org/data/2.5/weather?q=city,country");
         try {
+
             HttpResponse getResponse = client.execute(getRequest);
+            Log.w("test", "Error for URL boucle " + getRequest.toString());
             final int statusCode = getResponse.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
                 Log.w(getClass().getSimpleName(),
@@ -232,4 +256,43 @@ public class SearchActivity extends Activity implements LieuAdapterListener {
         return null;
     }
 
+    public void onBackPressed() {
+        Intent mIntent = new Intent();
+        ////Bundle bundle = new Bundle();
+        //bundle.putSerializable("result",item);
+        //mIntent.putExtras(bundle);
+        setResult(2,mIntent);
+         Log.d("test", "Location reçue dans la boucle: je suis dans search ");
+        finish();
+    }
+
+    @Override
+    public boolean onClose() {
+        Log.d("test", "Location reçue dans la boucle: test close :");
+        listResultats.setAdapter(adaptater);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+       // Log.d("test", "Location reçue dans la boucle: test query submit :");
+        lancerRecherche(s);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+
+        if (!s.isEmpty()){
+            lancerRecherche(s);
+        } else {
+            adaptater = new ArrayResultsSearchAdaptater(
+                    this.getBaseContext(), new ArrayList<Lieu>(),
+                    R.layout.affichage_item,
+                    new String[] {"titre", "desc" }, new int[] {
+                    R.id.titre, R.id.desc });
+            listResultats.setAdapter(adaptater);
+        }
+        return false;
+    }
 }

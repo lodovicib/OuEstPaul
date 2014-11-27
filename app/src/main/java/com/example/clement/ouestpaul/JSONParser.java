@@ -5,6 +5,7 @@ import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -33,7 +34,7 @@ public class JSONParser {
             // defaultHttpClient
 
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+            HttpGet httpPost = new HttpGet(url);
             Log.d("test", "Location reçue dans la boucle: je test json"+httpPost.toString());
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
