@@ -121,6 +121,15 @@ public class RechercheLieu {
         return lieux;
     }
 
+    public Lieu getLieuWithIdType(int id, String type) {
+        for (Lieu l : lieux) {
+            if (l.getIdLieu() == id && l.getType().toString().equals(type)) {
+                return l;
+            }
+        }
+        return null;
+    }
+
     /**********************************************************/
     /** Getter : getFavorites
      *

@@ -38,6 +38,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gson.Gson;
 
 
@@ -60,7 +63,8 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
     private SearchView editRecherche;
     private RechercheLieu listeLieux;
     private String saisieRecherche;
-    ArrayResultsSearchAdaptater adaptater;
+    private ArrayResultsSearchAdaptater adaptater;
+    private Map<String, ?> favoris;
     private final static int ID_FAVORIS_DIALOG = 0;
     Dialog box = null;
  //  JSONArray user = null;
@@ -134,8 +138,22 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
         } catch (JSONException e) {
             e.printStackTrace();
         }*/
-        prefs = getPreferences(Context.MODE_PRIVATE);
         listeLieux = new RechercheLieu();
+        prefs = getPreferences(Context.MODE_PRIVATE);
+        favoris = prefs.getAll();
+        if (favoris.size() == 0)
+            Log.d("test", "Location reçue dans la boucle: je test je suis vide :");
+        else {
+            for (String key : favoris.keySet()) {
+                Lieu lieu = listeLieux.getLieuWithIdType(Integer.valueOf(key.toString()), (String) favoris.get(key));
+                if (lieu != null) {
+                    lieu.setFavorite(true);
+                    Log.d("test", "Location reçue dans la boucle: je test :"+favoris.keySet());
+                }
+            }
+          //  Log.d("test", "Location reçue dans la boucle: je test je suis PAS vide :" + favoris.get(String.valueOf(listeLieux.getLieux().get(0).getIdLieu())).equals(listeLieux.getLieux().get(0).getType().toString()));
+
+        } Log.d("test", "Location reçue dans la boucle: je test :"+listeLieux.getLieux().get(0).getIdLieu()+" - "+favoris.keySet());
         editRecherche = (SearchView) findViewById(R.id.searchView);
         editRecherche.setOnQueryTextListener( this);
         editRecherche.setOnCloseListener(this);
@@ -179,17 +197,22 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
 
 
     public void onClickFavoris(Lieu item, View rowView) {
+        SharedPreferences.Editor editeur = prefs.edit();
         Lieu lieu = listeLieux.getLieux().get(listeLieux.getLieux().indexOf(item));
         ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
         // Log.d("test", "Location reçue dans la boucle: je suis dans search "+lieu.getNom());
         if (lieu.isFavorite()) {
             lieu.setFavorite(false);
             iconeView.setImageResource(R.drawable.ic_star);
+            editeur.remove(String.valueOf(lieu.getIdLieu()));
         }
         else {
             lieu.setFavorite(true);
             iconeView.setImageResource(R.drawable.ic_star_fav);
+            editeur.putString(String.valueOf(lieu.getIdLieu()), lieu.getType().name());
         }
+        editeur.commit();
+        favoris = prefs.getAll();
     }
 
     // fonction de recherche
@@ -198,7 +221,10 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
         RechercheLieu lieuxFiltre = listeLieux.find(nomRechercher);
 
         for (Lieu lieu : lieuxFiltre.getLieux()) {
-            result.add(lieu);
+          /* if (favoris.containsKey(String.valueOf(lieu.getIdLieu())) && favoris.get(lieu.getIdLieu()).equals(lieu.getType().toString())) {
+               lieu.setFavorite(true);
+               Log.d("test", "Location reçue dans la boucle: je test :"+favoris.keySet());
+           }*/ result.add(lieu);
         }
         adaptater = new ArrayResultsSearchAdaptater(
                 this.getBaseContext(), result,
