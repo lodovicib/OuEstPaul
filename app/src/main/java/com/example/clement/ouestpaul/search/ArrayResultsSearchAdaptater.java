@@ -7,10 +7,12 @@ package com.example.clement.ouestpaul.search;
 /***********************************************************************************/
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clement.ouestpaul.lieux.Lieu;
@@ -35,7 +37,7 @@ import java.util.List;
  * 		int getCount()
  /***********************************************************************************/
 
-public class ArrayResultsSearchAdaptater extends BaseAdapter {
+public class ArrayResultsSearchAdaptater extends BaseAdapter  {
 
     /********************VARIABLE(S)**************************************/
     /**************
@@ -72,6 +74,22 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter {
     }
     /********************FIN CONSTRUCTEUR(S)******************************/
 
+ /*   public void onClickFavoris(Lieu item, int position) {
+        View rowView = mInflater.inflate(R.layout.affichage_item, null);
+        Log.w("test", "Error for URL boucle " + position);
+        Lieu ligne = mLignes.get(position);
+        ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
+        if (ligne.isFavorite()) {
+            iconeView.setImageResource(R.drawable.ic_star);
+            ligne.setFavorite(false);
+        }
+        else {
+            iconeView.setImageResource(R.drawable.ic_star_fav);
+            ligne.setFavorite(true);
+        }
+    }
+*/
+
     /**********************************************************/
     /** Nom de la méthode : getView
      *  Description : Personnalise la vue associée à un item
@@ -83,19 +101,36 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter {
     public final View getView(final int position,
                               final View convertView, final ViewGroup parent) {
 
-        View rowView = mInflater.inflate(R.layout.affichage_item, null);
+        final View rowView = mInflater.inflate(R.layout.affichage_item, null);
         Lieu ligne = mLignes.get(position);
         TextView nameView = (TextView) rowView.findViewById(R.id.titre);
         nameView.setText(ligne.toString());
        // TextView sizeView = (TextView) rowView.findViewById(R.id.desc);
        // sizeView.setText(String.valueOf(ligne.getDesc()));
-  //      ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
-  //     iconeView.setImageResource(ligne.getImg());
+        ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
+        if(ligne.isFavorite())
+            iconeView.setImageResource(R.drawable.ic_star_fav);
+        else
+            iconeView.setImageResource(R.drawable.ic_star);
+      // iconeView.setImageResource(ligne.getImg());
 
         //------------ Début de l'ajout -------
 //On mémorise la position de la "Personne" dans le composant textview
+        iconeView.setTag(position);
         nameView.setTag(position);
 //On ajoute un listener
+        iconeView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Lorsque l'on clique sur le nom, on récupère la position de la "Personne"
+                Integer position = (Integer) v.getTag();
+
+                //On prévient les listeners qu'il y a eu un clic sur le TextView "TV_Nom".
+                sendListenerFavoris(mLignes.get(position), rowView);
+
+            }
+        });
         nameView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -152,6 +187,12 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter {
     private void sendListener(Lieu item, int position) {
         for(int i = mListListener.size()-1; i >= 0; i--) {
             mListListener.get(i).onClickNom(item, position);
+        }
+    }
+
+    private void sendListenerFavoris(Lieu item, View rowView) {
+        for(int i = mListListener.size()-1; i >= 0; i--) {
+            mListListener.get(i).onClickFavoris(item,  rowView);
         }
     }
 }

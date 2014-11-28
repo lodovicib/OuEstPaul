@@ -2,11 +2,15 @@ package com.example.clement.ouestpaul.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -51,10 +55,9 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
     private static final String TAG_LONG = "X";
     private static final String TAG_LAT = "Y";
 */
+    private SharedPreferences prefs;
     private ListView listResultats;
     private SearchView editRecherche;
-   // Map<String, String> hashMapResultats;
-   // List<Map<String, String>> myMapList = new ArrayList<Map<String, String>>();
     private RechercheLieu listeLieux;
     private String saisieRecherche;
     ArrayResultsSearchAdaptater adaptater;
@@ -62,14 +65,11 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
     Dialog box = null;
  //  JSONArray user = null;
 
-/*   public void addCharDansLeChampDeRecherche(char c) {
-        editRecherche.setText(c);
-    }
-*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
  /*       StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         HttpURLConnection con = null ;
@@ -134,6 +134,7 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
         } catch (JSONException e) {
             e.printStackTrace();
         }*/
+        prefs = getPreferences(Context.MODE_PRIVATE);
         listeLieux = new RechercheLieu();
         editRecherche = (SearchView) findViewById(R.id.searchView);
         editRecherche.setOnQueryTextListener( this);
@@ -176,32 +177,34 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
 
     }
 
+
+    public void onClickFavoris(Lieu item, View rowView) {
+        Lieu lieu = listeLieux.getLieux().get(listeLieux.getLieux().indexOf(item));
+        ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
+        // Log.d("test", "Location reçue dans la boucle: je suis dans search "+lieu.getNom());
+        if (lieu.isFavorite()) {
+            lieu.setFavorite(false);
+            iconeView.setImageResource(R.drawable.ic_star);
+        }
+        else {
+            lieu.setFavorite(true);
+            iconeView.setImageResource(R.drawable.ic_star_fav);
+        }
+    }
+
     // fonction de recherche
     public final void lancerRecherche(final String nomRechercher) {
         ArrayList<Lieu> result = new ArrayList<Lieu>();
-        //List<Map<String, String>> myMapList = new ArrayList<Map<String, String>>();
         RechercheLieu lieuxFiltre = listeLieux.find(nomRechercher);
 
         for (Lieu lieu : lieuxFiltre.getLieux()) {
             result.add(lieu);
-            //Toast.makeText(this, lieu.isFavorite().toString(), Toast.LENGTH_LONG);
- /*           if(lieu.isFavorite()){
-                mapResultat.setImg(R.drawable.ic_star_fav);
-            }
-            else
-            {
-                mapResultat.setImg(R.drawable.ic_star);
-            }
-*/
         }
-       // Log.d("test", "Location reçue dans la boucle: test query text change :"+result.size());
         adaptater = new ArrayResultsSearchAdaptater(
                 this.getBaseContext(), result,
                 R.layout.affichage_item,
-//                new String[] {"titre", "desc", "img" }, new int[] {
- //               R.id.titre, R.id.desc, R.id.img });
-                new String[] {"titre", "desc" }, new int[] {
-                R.id.titre, R.id.desc });
+                new String[] {"titre", "desc", "img" }, new int[] {
+                R.id.titre, R.id.desc, R.id.img });
         adaptater.addListener(this);
         listResultats.setAdapter(adaptater);
     }
@@ -229,9 +232,10 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
         bundle.putSerializable("result",item);
         mIntent.putExtras(bundle);
         setResult(1,mIntent);
-       // Log.d("test", "Location reçue dans la boucle: je suis dans search "+item.getCoordonnee().toString());
         finish();
     }
+
+
 
     private InputStream retrieveStream(String url) {
         DefaultHttpClient client = new DefaultHttpClient();
@@ -258,24 +262,18 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
 
     public void onBackPressed() {
         Intent mIntent = new Intent();
-        ////Bundle bundle = new Bundle();
-        //bundle.putSerializable("result",item);
-        //mIntent.putExtras(bundle);
         setResult(2,mIntent);
-         Log.d("test", "Location reçue dans la boucle: je suis dans search ");
         finish();
     }
 
     @Override
     public boolean onClose() {
-        Log.d("test", "Location reçue dans la boucle: test close :");
         listResultats.setAdapter(adaptater);
         return false;
     }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-       // Log.d("test", "Location reçue dans la boucle: test query submit :");
         lancerRecherche(s);
         return false;
     }
@@ -289,8 +287,8 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
             adaptater = new ArrayResultsSearchAdaptater(
                     this.getBaseContext(), new ArrayList<Lieu>(),
                     R.layout.affichage_item,
-                    new String[] {"titre", "desc" }, new int[] {
-                    R.id.titre, R.id.desc });
+                    new String[] {"titre", "desc", "img" }, new int[] {
+                    R.id.titre, R.id.desc, R.id.img });
             listResultats.setAdapter(adaptater);
         }
         return false;

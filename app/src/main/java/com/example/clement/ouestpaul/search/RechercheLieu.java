@@ -18,6 +18,7 @@ public class RechercheLieu {
         lieux = new LinkedList<Lieu>();
 
         Batiment b1 = new Batiment(1, "U1", new Position(43.560304, 1.470264));
+      //  b1.setFavorite(true);
         Batiment b2 = new Batiment(2, "U2", new Position(43.561322, 1.470526));
         Batiment b3 = new Batiment(3, "U3", new Position(43.561961, 1.469963));
         Batiment b4 = new Batiment(4, "A2", new Position(43.562313, 1.458113));
@@ -243,6 +244,7 @@ public class RechercheLieu {
             lieux.push(new Service(_id, _nom, _coord));
         }
     }
+
     /********************VARIABLE(S)**************************************/
     private LinkedList<Lieu> lieux;
 /********************FIN VARIABLE(S)**********************************/

@@ -1,5 +1,7 @@
 package com.example.clement.ouestpaul.interfaces;
 
+import android.view.View;
+
 import com.example.clement.ouestpaul.lieux.Lieu;
 
 /**
@@ -7,4 +9,5 @@ import com.example.clement.ouestpaul.lieux.Lieu;
  */
 public interface LieuAdapterListener {
     public void onClickNom(Lieu item, int position);
+    public void onClickFavoris(Lieu item, View rowView);
 }
