@@ -10,9 +10,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clement.ouestpaul.lieux.Lieu;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity {
@@ -81,6 +84,26 @@ private String provider;
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+                @Override
+                public View getInfoContents(Marker arg0) {
+                    View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+                    String title = arg0.getTitle();
+                    String msg = arg0.getSnippet();
+                    TextView textTitle = (TextView) v.findViewById(R.id.title);
+                    TextView textMsg = (TextView) v.findViewById(R.id.msg);
+                    textTitle.setText(title);
+                    if (msg == null)
+                        textMsg.setVisibility(View.INVISIBLE);
+                    else
+                        textMsg.setText(Html.fromHtml(msg));
+                    return v;
+                }
+            });
             if (mMap != null) {
                 mMap.setMyLocationEnabled(true);
                 setUpMap();
@@ -179,7 +202,15 @@ private String provider;
             Lieu mPerson = (Lieu)data.getSerializableExtra("result");
             mMap.clear();
             arrivee = new LatLng(mPerson.getCoordonnee().getX(), mPerson.getCoordonnee().getY());
-            mMap.addMarker(new MarkerOptions().position(arrivee).title(mPerson.toString()));
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(arrivee);
+            markerOptions.title(mPerson.toString());
+            markerOptions.snippet(mPerson.getDesc());
+            mMap.addMarker(markerOptions);
+           // marker.showInfoWindow();
+
+           // mMap.addMarker(new MarkerOptions().position(arrivee).title(mPerson.toString()).snippet(mPerson.getDesc()));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(arrivee, 15.0f));
             button_carte.setVisibility(View.VISIBLE);
             button_carte.setEnabled(true);

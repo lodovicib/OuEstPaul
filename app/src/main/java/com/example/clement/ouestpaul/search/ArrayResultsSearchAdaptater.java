@@ -57,38 +57,11 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter  {
     @SuppressWarnings("unchecked")
     public ArrayResultsSearchAdaptater(final Context _context, final ArrayList<Lieu> data,
                              final int resource, final String[] from, final int[] to) {
-       // super(context, data, resource, from, to);
-        //Log.d("test", "Location reçue dans la boucle: je suis dans lancerrecherche hash "+ data.toArray());
-       // mLignes = new ArrayList<ResultsSearch>();
-       /* Iterator<? extends Map<String, ?>> it = data.iterator() ;
-        while (it.hasNext()) {
-            HashMap<String, String> h = (HashMap<String, String>) it.next();
-              for(String key: h.keySet()) {
-                  mLignes.add(new ResultsSearch(key, h.get(key)));
-             }
-
-        }*/
         context = _context;
         mLignes = data;
         mInflater = LayoutInflater.from(context);
     }
     /********************FIN CONSTRUCTEUR(S)******************************/
-
- /*   public void onClickFavoris(Lieu item, int position) {
-        View rowView = mInflater.inflate(R.layout.affichage_item, null);
-        Log.w("test", "Error for URL boucle " + position);
-        Lieu ligne = mLignes.get(position);
-        ImageView iconeView = (ImageView) rowView.findViewById(R.id.img);
-        if (ligne.isFavorite()) {
-            iconeView.setImageResource(R.drawable.ic_star);
-            ligne.setFavorite(false);
-        }
-        else {
-            iconeView.setImageResource(R.drawable.ic_star_fav);
-            ligne.setFavorite(true);
-        }
-    }
-*/
 
     /**********************************************************/
     /** Nom de la méthode : getView
@@ -112,7 +85,6 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter  {
             iconeView.setImageResource(R.drawable.ic_star_fav);
         else
             iconeView.setImageResource(R.drawable.ic_star);
-      // iconeView.setImageResource(ligne.getImg());
 
         //------------ Début de l'ajout -------
 //On mémorise la position de la "Personne" dans le composant textview
@@ -125,10 +97,8 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter  {
             public void onClick(View v) {
                 //Lorsque l'on clique sur le nom, on récupère la position de la "Personne"
                 Integer position = (Integer) v.getTag();
-
                 //On prévient les listeners qu'il y a eu un clic sur le TextView "TV_Nom".
                 sendListenerFavoris(mLignes.get(position), rowView);
-
             }
         });
         nameView.setOnClickListener(new View.OnClickListener() {
@@ -137,13 +107,10 @@ public class ArrayResultsSearchAdaptater extends BaseAdapter  {
             public void onClick(View v) {
                 //Lorsque l'on clique sur le nom, on récupère la position de la "Personne"
                 Integer position = (Integer) v.getTag();
-
                 //On prévient les listeners qu'il y a eu un clic sur le TextView "TV_Nom".
                 sendListener(mLignes.get(position), position);
-
             }
         });
-
             return rowView;
     }
     /**********************************************************/

@@ -18,6 +18,12 @@ public class Batiment extends Lieu {
         super(_id, _nom, Lieu.TypeLieu.BATIMENT, _coord);
     }
 
+    public Batiment(
+            final int _id, final String _nom,
+            final Position _coord, final String _activite, final String _etablissement) {
+        super(_id, _nom, Lieu.TypeLieu.BATIMENT, _coord, _activite, _etablissement);
+    }
+
     /**********************************************************/
     /** Nom de la méthode : toString
      *  Description : Convertie la classe en String

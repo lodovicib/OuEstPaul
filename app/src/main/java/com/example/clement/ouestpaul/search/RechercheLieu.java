@@ -1,11 +1,19 @@
 package com.example.clement.ouestpaul.search;
 
+import android.util.Log;
+
+import com.example.clement.ouestpaul.JSONParser;
 import com.example.clement.ouestpaul.lieux.Batiment;
 import com.example.clement.ouestpaul.lieux.Lieu;
 import com.example.clement.ouestpaul.location.Position;
 import com.example.clement.ouestpaul.lieux.Salle;
 import com.example.clement.ouestpaul.lieux.Service;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,18 +21,63 @@ import java.util.List;
  * Created by Adrien on 09/11/2014.
  */
 public class RechercheLieu {
+    private static final String TAG_FEATURE = "features";
+    private static final String TAG_PROPERTIES = "properties";
+    private static final String TAG_ID = "ID";
+    private static final String TAG_NOM = "Nom";
+    private static final String TAG_LONG = "X";
+    private static final String TAG_LAT = "Y";
+    private static final String TAG_ACTIVITE = "Activité";
+    private static final String TAG_ETABLI = "Etablissements";
+    JSONArray user = null;
+    private static String url = "https://gist.githubusercontent.com/anonymous/c0611f9df6eec247ee45/raw/1ac8f80694c078395b9aa404e482bfc734e4b9d3/map.geojson";
 
     public RechercheLieu() {
         lieux = new LinkedList<Lieu>();
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                LinkedList<Lieu> lieuxThead = new LinkedList<Lieu>();
+                JSONParser jParser = new JSONParser();
+                // Getting JSON from URL
+                JSONObject json = jParser.getJSONFromUrl(url);
+                try {
+                    // Getting JSON Array
+           user = json.getJSONArray(TAG_FEATURE);
+                    int i;
+
+                   for (i = 0; i < user.length() ; i++) {
+                      // Log.d("test", "Location reçue dans la boucle: je test json :");
+                       JSONObject array = user.getJSONObject(i).getJSONObject(TAG_PROPERTIES);
+                       // Storing  JSON item in a Variable
+                       String id = array.getString(TAG_ID);
+                       String name = array.getString(TAG_NOM);
+                       String longitude = array.getString(TAG_LONG);
+                       String lat = array.getString(TAG_LAT);
+                       String activite = array.getString(TAG_ACTIVITE);
+                       String etabli = array.getString(TAG_ETABLI);
+                       lieuxThead.push(
+                               new Batiment(Integer.valueOf(id), name, new Position(Double.valueOf(lat), Double.valueOf(longitude)), activite, etabli));
+                       //  Log.d("test", "Location reçue dans la boucle: je test json :" + id + " - " + name + " - " + longitude + " - " + lat);
+
+                   }
+                    setGetLieux(lieuxThead);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+            }
+        });
+
+t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Batiment b1 = new Batiment(1, "U1", new Position(43.560304, 1.470264));
       //  b1.setFavorite(true);
         Batiment b2 = new Batiment(2, "U2", new Position(43.561322, 1.470526));
-        Batiment b3 = new Batiment(3, "U3", new Position(43.561961, 1.469963));
-        Batiment b4 = new Batiment(4, "A2", new Position(43.562313, 1.458113));
-        Batiment b5 = new Batiment(5, "A1", new Position(43.562785, 1.458816));
-        Batiment b6 = new Batiment(6, "3TP1", new Position(43.559872, 1.468856));
-        Batiment b7 = new Batiment(7, "1R1", new Position(43.561283, 1.466285));
         Batiment b8 = new Batiment(8, "3TP2", new Position(43.560965, 1.467803));
 
         Salle s1 = new Salle(1, "Mathis", new Position(43.560304, 1.470264), b1);
@@ -35,22 +88,6 @@ public class RechercheLieu {
         Salle s6 = new Salle(6, "Denjoy", new Position(43.560304, 1.470264), b1);
         Salle s7 = new Salle(7, "Einstein", new Position(43.560965, 1.467803), b8);
 
-        lieux.push(b1);
-		lieux.getLast().addPorte(new Position(43.560474, 1.470285));
-        lieux.push(b2);
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-        lieux.push(b3);
-		lieux.getLast().addPorte(new Position(43.561502, 1.470264));
-        lieux.push(b4);
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-        lieux.push(b5);
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-        lieux.push(b6);
-        lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-        lieux.push(b7);
-        lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-        lieux.push(b8);
-        lieux.getLast().addPorte(new Position(43.561030, 1.470414));
 
         lieux.push(s1);
         lieux.push(s2);
@@ -59,21 +96,6 @@ public class RechercheLieu {
         lieux.push(s5);
         lieux.push(s6);
         lieux.push(s7);
-
-/*		addSalle(5, "210", new Position(4.561734, 10.470425), new Batiment(2,"U2", new Position(43.561734, 1.470425)));
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-		addSalle(6, "211", new Position(4.561734, 10.470425), new Batiment(2,"U2", new Position(43.561734, 1.470425)));
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-		addSalle(7, "010", new Position(4.561734, 10.470425), new Batiment(3,"U3", new Position(43.561734, 1.470425)));
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-
-/*		addService(8, "infirmerie", new Position(4.561734, 10.470425), new Batiment(12,"Administration", new Position(43.561734, 1.470425)));
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-		addService(9, "Cafétéria", new Position(4.561734, 10.470425), new Batiment(13,"RU1", new Position(43.561734, 1.470425)));
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-		addService(10, "Parking 1", new Position(4.561734, 10.470425), null);
-		lieux.getLast().addPorte(new Position(43.561030, 1.470414));
-		*/
     }
 
     /**********************************************************/
@@ -110,6 +132,9 @@ public class RechercheLieu {
         lieux.add(_l);
     }
 
+    public synchronized void setGetLieux(LinkedList<Lieu> l) {
+       lieux = l;
+    }
     /**********************************************************/
     /** Getter : getLieux
      *
@@ -137,8 +162,8 @@ public class RechercheLieu {
      *  @return List<Lieu>
      *  		liste des Lieu favoris
     /**********************************************************/
-    public final List<Lieu> getFavorites() {
-        List<Lieu> ls = new LinkedList<Lieu>();
+    public final ArrayList<Lieu> getFavorites() {
+        ArrayList<Lieu> ls = new ArrayList<Lieu>();
 
         for (Lieu l : lieux) {
             if (l.isFavorite()) {

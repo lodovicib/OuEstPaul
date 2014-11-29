@@ -12,12 +12,18 @@
     android:clickable="false"
     android:id="@+id/search_bar">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filtre"
+        android:id="@+id/button"
+        android:textColor="#ffffffff"
+        android:layout_toEndOf="@+id/buttonFavoris" />
+
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:background="#ffffffff"
         android:baselineAligned="false"
         android:clickable="true"
@@ -27,7 +33,9 @@
         android:minWidth="30dp"
         android:layout_gravity="right|top"
         android:longClickable="false"
-        android:hint="Recherche" >
+        android:hint="Recherche"
+        android:layout_below="@+id/buttonFavoris"
+        android:layout_alignParentEnd="true">
 
     <requestFocus />
 </SearchView>
@@ -45,5 +53,28 @@
         android:drawSelectorOnTop="true"
         android:focusable="false"
         android:inputType="textNoSuggestions"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonFavoris"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_star_fav"
+        android:onClick="onClick_buttonFavoris"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listFavoris"
+        android:layout_below="@+id/buttonFavoris"
+        android:background="#f5f1e8"
+        android:clickable="true"
+        android:divider="#cfc6b5"
+        android:dividerHeight="1dp"
+        android:drawSelectorOnTop="true"
+        android:focusable="false"
+        android:inputType="textNoSuggestions"/>
+
 
 </RelativeLayout>

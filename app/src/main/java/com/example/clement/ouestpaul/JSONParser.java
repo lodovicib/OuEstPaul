@@ -32,15 +32,11 @@ public class JSONParser {
 
         try {
             // defaultHttpClient
-
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpPost = new HttpGet(url);
-            Log.d("test", "Location reçue dans la boucle: je test json"+httpPost.toString());
             HttpResponse httpResponse = httpClient.execute(httpPost);
-
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
-            //Log.d("test", "Location reçue dans la boucle: je test json");
             } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             } catch (ClientProtocolException e) {
@@ -51,11 +47,11 @@ public class JSONParser {
             }
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
+                    is, "UTF-8"), 8); //"iso-8859-1"
             StringBuilder sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "n");
+                sb.append(line);
                 }
             is.close();
             json = sb.toString();

@@ -65,6 +65,10 @@ public abstract class Lieu implements Serializable  {
     /**************
      * Liste les coordonnées des portes du Lieu
      /*************/
+
+    protected String activite;
+    protected String etablissement;
+
     protected LinkedList<Position> portes;
     /**************
      * Liste des types de lieux
@@ -96,6 +100,20 @@ public abstract class Lieu implements Serializable  {
         nom = _nom;
         type = _type;
         coordonnee = _coord;
+        activite = null;
+        etablissement = null;
+        portes = new LinkedList<Position>();
+        favorite = false;
+    }
+
+    Lieu(final int _id, final String _nom, final TypeLieu _type,
+         final Position _coord, final String _activite, final String _etablissement) {
+        idLieu = _id;
+        nom = _nom;
+        type = _type;
+        coordonnee = _coord;
+        activite =  _activite;
+        etablissement = _etablissement;
         portes = new LinkedList<Position>();
         favorite = false;
     }
@@ -204,6 +222,23 @@ public abstract class Lieu implements Serializable  {
             }
         }
         return porte;
+    }
+
+    public String getActivite() {
+        return activite;
+    }
+
+    public String getEtablissement() {
+        return etablissement;
+    }
+
+    public String getDesc() {
+        String desc = "";
+        if (getEtablissement() != null)
+            desc = desc + "Etablissement : "+getEtablissement();
+        if (getActivite() != null)
+            desc = desc + "<br>Activité : "+getActivite();
+        return desc;
     }
 
     /**********************************************************/
