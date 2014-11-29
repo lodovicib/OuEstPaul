@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.example.clement.ouestpaul.search.RechercheLieu.TypeRecherche.*;
+
 /**
  * Created by Adrien on 09/11/2014.
  */
@@ -31,6 +33,17 @@ public class RechercheLieu {
     private static final String TAG_ETABLI = "Etablissements";
     JSONArray user = null;
     private static String url = "https://gist.githubusercontent.com/anonymous/c0611f9df6eec247ee45/raw/1ac8f80694c078395b9aa404e482bfc734e4b9d3/map.geojson";
+
+    public static enum TypeRecherche {
+        /** Type batiment */
+        ALL,
+        /** Type arret (bus ou métro) */
+        NOTHING,
+        /** Type service (infirmerie, parking cafeteria, etc...) */
+        ETABLIONLY,
+        /** Type salle (de cours, TP, amphi, etc...) */
+        ACTIVITEONLY
+    }
 
     public RechercheLieu() {
         lieux = new LinkedList<Lieu>();
@@ -155,6 +168,27 @@ t.start();
         return null;
     }
 
+    public final ArrayList<String> getEtablissements() {
+        ArrayList<String> ls = new ArrayList<String>();
+ls.add("Tous");
+        for (Lieu l : lieux) {
+            if (!ls.contains(l.getEtablissement()) && l.getEtablissement() != null)
+                ls.add(l.getEtablissement());
+        }
+
+        return ls;
+    }
+
+    public final ArrayList<String> getActivites() {
+        ArrayList<String> ls = new ArrayList<String>();
+        ls.add("Tous");
+        for (Lieu l : lieux) {
+            if (!ls.contains(l.getActivite()) && l.getActivite() != null && !l.getActivite().equals("null"))
+                ls.add(l.getActivite());
+        }
+
+        return ls;
+    }
     /**********************************************************/
     /** Getter : getFavorites
      *
@@ -171,6 +205,56 @@ t.start();
             }
         }
 
+        return ls;
+    }
+
+    private TypeRecherche typeOfRechercheA(String _etabli, String _activite) {
+        if (_etabli.equals("Tous") && _activite.equals("Tous")) // 1 1
+            return NOTHING;
+        else if (!_etabli.equals("Tous") && !_activite.equals("Tous")) // 0 0
+            return ALL;
+        else if (_etabli.equals("Tous") && !_activite.equals("Tous")) // 1 0
+            return ACTIVITEONLY;
+        return ETABLIONLY; // 0 1
+    }
+
+    public ArrayList<Lieu> findByNameRechercheA(String _nom, String _etabli, String _activite) {
+
+        ArrayList<Lieu> ls = new ArrayList<Lieu>();
+if (_nom == null)
+    _nom = "";
+        switch (typeOfRechercheA(_etabli, _activite)) {
+            case ALL :
+                for (Lieu l : lieux) {
+                    if (l.getNom().toLowerCase().contains(_nom.toLowerCase())
+                            && l.getEtablissement() != null && l.getActivite() != null
+                            && l.getActivite().equals(_activite) && l.getEtablissement().equals(_etabli)) {
+                        ls.add(l);
+                    }
+                }
+                break;
+            case NOTHING :
+                ls.addAll(findByNameBegin(_nom).getLieux());
+                break;
+            case ETABLIONLY :
+                for (Lieu l : lieux) {
+                    if (l.getNom().toLowerCase().contains(_nom.toLowerCase())
+                            && l.getEtablissement() != null && l.getEtablissement().equals(_etabli)) {
+                        ls.add(l);
+                    }
+                }
+                break;
+            case ACTIVITEONLY :
+                for (Lieu l : lieux) {
+                    if (l.getNom().toLowerCase().contains(_nom.toLowerCase())
+                           && l.getActivite() != null && l.getActivite().equals(_activite)) {
+                        ls.add(l);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
         return ls;
     }
     /**********************************************************/
@@ -212,7 +296,7 @@ t.start();
     public final RechercheLieu findByNameBegin(final String _nom) {
         LinkedList<Lieu> ls = new LinkedList<Lieu>();
         for (Lieu l : lieux) {
-            if (l.getNom().toLowerCase().startsWith(_nom.toLowerCase())) {
+            if (l.getNom().toLowerCase().contains(_nom.toLowerCase())) {
                 ls.push(l);
             }
         }
