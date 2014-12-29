@@ -37,7 +37,7 @@ import java.util.LinkedList;
  /***********************************************************************************/
 
 
-public abstract class Lieu implements Serializable  {
+public abstract class Lieu implements Serializable, Comparable<Lieu>  {
 
     protected static final long serialVersionUID = -7060210544600464481L;
 

@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -175,7 +176,7 @@ ls.add("Tous");
             if (!ls.contains(l.getEtablissement()) && l.getEtablissement() != null)
                 ls.add(l.getEtablissement());
         }
-
+        Collections.sort(ls);
         return ls;
     }
 
@@ -186,7 +187,7 @@ ls.add("Tous");
             if (!ls.contains(l.getActivite()) && l.getActivite() != null && !l.getActivite().equals("null"))
                 ls.add(l.getActivite());
         }
-
+        Collections.sort(ls);
         return ls;
     }
     /**********************************************************/
@@ -204,7 +205,7 @@ ls.add("Tous");
                 ls.add(l);
             }
         }
-
+        Collections.sort(ls);
         return ls;
     }
 
@@ -255,6 +256,7 @@ if (_nom == null)
             default:
                 break;
         }
+        Collections.sort(ls);
         return ls;
     }
     /**********************************************************/
@@ -272,7 +274,7 @@ if (_nom == null)
                 ls.add(l);
             }
         }
-
+        Collections.sort(ls);
         return ls;
     }
 
@@ -300,6 +302,7 @@ if (_nom == null)
                 ls.push(l);
             }
         }
+        Collections.sort(ls);
         return new RechercheLieu(ls);
     }
 

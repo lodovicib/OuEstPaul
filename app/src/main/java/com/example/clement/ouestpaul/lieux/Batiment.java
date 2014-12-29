@@ -33,4 +33,8 @@ public class Batiment extends Lieu {
         return getNom();
     }
 
+    @Override
+    public int compareTo(Lieu o) {
+        return this.nom.compareTo(o.getNom());
+    }
 }

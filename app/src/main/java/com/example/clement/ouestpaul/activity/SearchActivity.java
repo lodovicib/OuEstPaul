@@ -228,15 +228,15 @@ public class SearchActivity extends Activity implements LieuAdapterListener, Sea
                 resultText.setText("Trouvé : 1 résulat");
             else
                 resultText.setText("Trouvé : "+result.size()+" résultats");
-            adaptater = new ArrayResultsSearchAdaptater(
-                    this.getBaseContext(), result,
-                    R.layout.affichage_item,
-                    new String[]{"titre", "desc", "img"}, new int[]{
-                    R.id.titre, R.id.desc, R.id.img});
-            adaptater.addListener(this);
-            listResultRechercheA.setAdapter(adaptater);
-            Helper.getListViewSize(listResultRechercheA);
         } else
-                resultText.setText("Trouvé : Aucun résultat");
+            resultText.setText("Trouvé : Aucun résultat");
+        adaptater = new ArrayResultsSearchAdaptater(
+                this.getBaseContext(), result,
+                R.layout.affichage_item,
+                new String[]{"titre", "desc", "img"}, new int[]{
+                R.id.titre, R.id.desc, R.id.img});
+        adaptater.addListener(this);
+        listResultRechercheA.setAdapter(adaptater);
+        Helper.getListViewSize(listResultRechercheA);
     }
 }

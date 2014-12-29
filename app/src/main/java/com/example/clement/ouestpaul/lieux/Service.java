@@ -70,4 +70,9 @@ public class Service extends Lieu {
         }
         return getNom();
     }
+
+    @Override
+    public int compareTo(Lieu lieu) {
+        return this.nom.compareTo(lieu.getNom());
+    }
 }

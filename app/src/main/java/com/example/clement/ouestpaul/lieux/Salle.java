@@ -54,4 +54,8 @@ public class Salle extends Lieu {
         return batiment.getNom() + " - " + getNom();
     }
 
+    @Override
+    public int compareTo(Lieu lieu) {
+        return this.nom.compareTo(lieu.getNom());
+    }
 }
