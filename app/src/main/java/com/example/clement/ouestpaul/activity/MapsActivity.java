@@ -94,16 +94,19 @@ private String provider;
         initButton();
 
        // handler = new Handler();
+try {
+    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    critere = new Criteria();
+    critere.setAccuracy(Criteria.ACCURACY_FINE);
+    best = locationManager.getBestProvider(critere, true);
+    loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
+    if (best.equals("gps"))
+        provider = LocationManager.GPS_PROVIDER;
+    else
+        provider = LocationManager.NETWORK_PROVIDER;
+} catch (Exception e) {
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        critere = new Criteria();
-        critere.setAccuracy(Criteria.ACCURACY_FINE);
-        best = locationManager.getBestProvider(critere, true);
-        loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
-        if (best.equals("gps"))
-            provider = LocationManager.GPS_PROVIDER;
-        else
-            provider = LocationManager.NETWORK_PROVIDER;
+}
         setUpMapIfNeeded();
     }
 

@@ -48,6 +48,12 @@ public class RechercheLieu {
 
     public RechercheLieu() {
         lieux = new LinkedList<Lieu>();
+        JSONParser jParser = new JSONParser();
+        try {
+            jParser.makeRequest("http://10.0.2.2/apiDev/tracking/addTrack");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Thread t = new Thread(new Runnable(){
             @Override
             public void run() {
