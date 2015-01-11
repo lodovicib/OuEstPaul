@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.clement.ouestpaul.JSONParser;
 import com.example.clement.ouestpaul.lieux.Lieu;
 import com.example.clement.ouestpaul.location.MyLocationOverlay;
 import com.example.clement.ouestpaul.R;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+/*
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -45,6 +47,7 @@ import edu.mit.media.funf.probe.builtin.WifiProbe;
 import edu.mit.media.funf.storage.NameValueDatabaseHelper;
 
 import static edu.mit.media.funf.probe.Probe.RequiredPermissions;
+*/
 
 public class MapsActivity extends FragmentActivity /*implements Probe.DataListener*/ {
 
@@ -55,9 +58,9 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
     private MyLocationOverlay loc;
     private Location curLocation;
     private Button button_carte, button_pieton, button_velo, button_voiture;
-   private LatLng arrivee;
+    private LatLng arrivee;
     private String best;
-private String provider;
+    private String provider;
     private static long MINDISTANCE = 10;
     private static long MINTIME = 10000;
 
@@ -92,21 +95,62 @@ private String provider;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         initButton();
+        final Handler mHandler = new Handler();
+        final Runnable toRun = new Runnable() {
+            @Override
+            public void run() {
+                Thread t = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        JSONParser parser = new JSONParser();
+                        try {
+                            parser.makeRequest("http:/192.168.1.91:8080/apiDev/tracking/addTrack");
+                        }
+                        catch(Exception e) {
+                            Log.e("Problem", e.getClass() + ": " + e.getMessage());
+                        }
+                    }
+                });
+                t.start();
+                mHandler.postDelayed(this, 10000);
+            }
+        };
+        mHandler.postDelayed(toRun, 10000);
+
 
        // handler = new Handler();
-try {
-    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    critere = new Criteria();
-    critere.setAccuracy(Criteria.ACCURACY_FINE);
-    best = locationManager.getBestProvider(critere, true);
-    loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
-    if (best.equals("gps"))
-        provider = LocationManager.GPS_PROVIDER;
-    else
-        provider = LocationManager.NETWORK_PROVIDER;
-} catch (Exception e) {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            critere = new Criteria();
+            critere.setAccuracy(Criteria.ACCURACY_FINE);
+            best = locationManager.getBestProvider(critere, true);
+            loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
+            if (best.equals("gps"))
+                provider = LocationManager.GPS_PROVIDER;
+            else
+                provider = LocationManager.NETWORK_PROVIDER;
+            Thread t = new Thread(new Runnable() {
 
-}
+                @Override
+                public void run() {
+                    JSONParser parser = new JSONParser();
+                    try {
+                        parser.makeRequest("http:/192.168.1.91:8080/apiDev/tracking/addTrack");
+                    }
+                    catch(Exception e) {
+                        Log.e("Problem", e.getClass() + ": " + e.getMessage());
+                    }
+                }
+            });
+            t.start();
+
+        } catch (Exception e) {
+
+            Log.e("HEY", e.getClass() + " : " + e.getMessage());
+        }
+
+
         setUpMapIfNeeded();
     }
 
