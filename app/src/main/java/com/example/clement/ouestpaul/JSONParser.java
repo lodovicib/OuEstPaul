@@ -1,5 +1,6 @@
 package com.example.clement.ouestpaul;
 
+import android.net.Uri;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -11,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -72,20 +75,37 @@ public class JSONParser {
         return jObj;
         }
 
-    public static HttpResponse makeRequest(String path) throws Exception
+    public static String makeRequest(String path) throws Exception
     {
         //instantiates httpclient to make request
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         //url with the post data
-        HttpPost httpost = new HttpPost(path);
+
+        URI uri = new URI("http", "", "192.168.1.91", 8080, "/apiDev/tracking/addTrack", "", "");
+        HttpPost httpost = new HttpPost(uri);
 
         //convert parameters into JSON object
+        JSONObject tracks = new JSONObject();
         JSONObject holder = new JSONObject();
-        holder.getJSONObject("{user: yolo, date: bla, tracking: [{x:1234567, y:23456789}]}");
+        JSONObject simple = new JSONObject();
+        JSONObject holderTrack = new JSONObject();
+
+        JSONArray tab = new JSONArray();
+        holder.put("user", "yolo");
+        holder.put("date", "A1231");
+        simple.put("x", 12345);
+        simple.put("y", 54321);
+        tab.put(simple);
+        tab.put(simple);
+        holderTrack.put("date", "1111");
+        holderTrack.put("tracks", tab);
+        holder.put("track", holderTrack);
+        Log.e("HEY", holder.toString());
+        tracks.put("tracking", holder);
 
         //passes the results to a string builder/entity
-        StringEntity se = new StringEntity(holder.toString());
+        StringEntity se = new StringEntity(tracks.toString());
 
         //sets the post request as the resulting string
         httpost.setEntity(se);
@@ -96,6 +116,7 @@ public class JSONParser {
 
         //Handles what is returned from the page
         ResponseHandler responseHandler = new BasicResponseHandler();
-        return (HttpResponse) httpclient.execute(httpost, responseHandler);
+        httpclient.execute(httpost, responseHandler);
+        return "ok";
     }
 }
