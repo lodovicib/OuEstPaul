@@ -33,7 +33,6 @@
         android:fontFamily="@string/abc_action_bar_home_description"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:theme="@style/TextAppearance.AppCompat.Base.CompactMenu.Dialog"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -54,15 +53,15 @@
         android:layout_alignEnd="@+id/map"
         android:clickable="true" />
 
-
     <fragment
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:tag="Google_Map"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="Google_Map"
         android:layout_above="@+id/header"
-        android:layout_below="@+id/button_recherche" />
+        android:layout_below="@+id/button_recherche"
+        tools:layout="@android:layout/test_list_item" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
