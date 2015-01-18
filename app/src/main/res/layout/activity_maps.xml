@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context=".MapsActivity"
+    tools:context=".MapsFragment"
     android:background="#32292a">
 
     <Button
@@ -13,45 +13,46 @@
         android:text="Y aller"
         android:id="@+id/button_carte"
         android:textStyle="bold"
-        android:gravity="center_vertical|center_horizontal"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
-        android:background="@color/abc_search_url_text_pressed"
-        android:minWidth="100dp"
-        android:layout_alignParentStart="false"
-        android:enabled="false"
-        android:clickable="true"
-        android:onClick="onClick_button_Carte" />
-
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/name_map"
-        android:height="@dimen/abc_action_bar_progress_bar_size"
-        android:hint="@string/abc_action_bar_home_description"
-        android:gravity="center_vertical|center_horizontal"
-        android:fontFamily="@string/abc_action_bar_home_description"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recherche"
-        android:id="@+id/button_recherche"
-        android:textStyle="bold"
-        android:gravity="center_vertical|center_horizontal"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
         android:background="#fff0a464"
-        android:enabled="true"
         android:minWidth="100dp"
-        android:onClick="onClick_button_Recherche"
-        android:focusable="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/map"
-        android:clickable="true" />
+        android:gravity="center_vertical|center_horizontal"
+        android:enabled="false"
+        android:clickable="true"
+
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <!--     <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name_map"
+            android:height="@dimen/abc_action_bar_progress_bar_size"
+            android:hint="@string/abc_action_bar_home_description"
+            android:gravity="center_vertical|center_horizontal"
+            android:fontFamily="@string/abc_action_bar_home_description"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" /> -->
+
+       <!-- <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recherche"
+            android:id="@+id/button_recherche"
+            android:textStyle="bold"
+            android:gravity="center_vertical|center_horizontal"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+            android:background="#fff0a464"
+            android:enabled="true"
+            android:minWidth="100dp"
+            android:onClick="onClick_button_Recherche"
+            android:focusable="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/map"
+            android:clickable="true" /> -->
 
     <fragment
         android:id="@+id/map"
@@ -59,53 +60,55 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="Google_Map"
-        android:layout_above="@+id/header"
-        android:layout_below="@+id/button_recherche"
+        android:layout_above="@+id/button_carte"
+
         tools:layout="@android:layout/test_list_item" />
+    <!--  android:layout_below="@+id/button_recherche" -->
+    <!--   <Button
+          style="?android:attr/buttonStyleSmall"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Pieton"
+          android:id="@+id/button_pieton"
+          android:layout_below="@+id/button_carte"
+          android:layout_alignParentStart="true"
+          android:enabled="true"
+          android:background="#ff694229"
+          android:textColor="#ffffffff"
+          android:visibility="invisible"
+          android:clickable="true"
+          android:onClick="onClick_button_SousCarte" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pieton"
-        android:id="@+id/button_pieton"
-        android:layout_below="@+id/button_carte"
-        android:layout_alignParentStart="true"
-        android:enabled="true"
-        android:background="#ff694229"
-        android:textColor="#ffffffff"
-        android:visibility="invisible"
-        android:clickable="true"
-        android:onClick="onClick_button_SousCarte" />
+      <Button
+          style="?android:attr/buttonStyleSmall"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Vélo"
+          android:id="@+id/button_velo"
+          android:enabled="true"
+          android:background="#ff694229"
+          android:textColor="#ffffffff"
+          android:visibility="invisible"
+          android:clickable="true"
+          android:onClick="onClick_button_SousCarte"
+          android:layout_below="@+id/button_carte"
+          android:layout_alignStart="@+id/header" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vélo"
-        android:id="@+id/button_velo"
-        android:enabled="true"
-        android:background="#ff694229"
-        android:textColor="#ffffffff"
-        android:visibility="invisible"
-        android:clickable="true"
-        android:onClick="onClick_button_SousCarte"
-        android:layout_below="@+id/button_carte"
-        android:layout_alignStart="@+id/header" />
+      <Button
+          style="?android:attr/buttonStyleSmall"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Voiture"
+          android:id="@+id/button_voiture"
+          android:enabled="true"
+          android:background="#ff694229"
+          android:textColor="#ffffffff"
+          android:visibility="invisible"
+          android:clickable="true"
+          android:onClick="onClick_button_SousCarte"
+          android:layout_alignTop="@+id/map"
+          android:layout_centerHorizontal="true" /> -->
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voiture"
-        android:id="@+id/button_voiture"
-        android:enabled="true"
-        android:background="#ff694229"
-        android:textColor="#ffffffff"
-        android:visibility="invisible"
-        android:clickable="true"
-        android:onClick="onClick_button_SousCarte"
-        android:layout_alignTop="@+id/map"
-        android:layout_centerHorizontal="true" />
 
-</RelativeLayout>
+
+  </RelativeLayout>

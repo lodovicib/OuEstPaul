@@ -2,7 +2,21 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:activatedBackgroundIndicator">@drawable/select_menu</item>
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="QueryTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/select_menu</item>
+        <!-- for native ActionBar -->
+        <item name="android:actionBarItemBackground">@drawable/select_menu</item>
+        <!-- Any customizations for your app running on devices with Theme.Holo here -->
+    </style>
+
+    <style name="WelcomeTheme" parent="AppTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

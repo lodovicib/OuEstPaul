@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <color name="pressed_color">#fff0a464</color>
     <string name="app_name">OuEstPaul</string>
     <string name="title_activity_maps">OuEstPaul</string>
     <string name="title_activity_search">Recherche</string>
@@ -8,5 +8,18 @@
     <string name="name_map">Carte</string>
     <string name="button_recherche">Recherche</string>
     <string name="default_pipeline" />
+    <string-array name="planets_array">
+        <item>Accueil</item>
+        <item>Services</item>
+        <item>Paramètres</item>
+    </string-array>
+    <string-array name="icons_array">
+        <item>@drawable/ic_action_map</item>
+        <item>@drawable/ic_action_storage</item>
+        <item>@drawable/ic_action_settings</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
 </resources>

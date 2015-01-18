@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.clement.ouestpaul.activity.MapsActivity;
+import com.example.clement.ouestpaul.fragment.MapsFragment;
 
 /**
  * Created by Adrien on 02/11/2014.
@@ -17,10 +18,64 @@ public class MyLocationOverlay {
     LocationListener loc;
 Location location;
     MapsActivity mMapActivity;
+MapsFragment frag;
     public static final String TAG = "LocationOverlay";
 /*    public MyLocationOverlay(Context context, MapView carte) {
 
     }*/
+
+    public MyLocationOverlay(Location _location, MapsFragment g) {
+        frag = g;
+        location = _location;
+        //       location.setAltitude(0);
+        //      location.setLongitude(0);
+        //      Log.d("test", "Location reçue dans la boucle: blablala ");
+        loc = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.d(TAG, "Location reçue : lat=" + location.getLatitude() + "/long=" + location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+                StringBuffer buf = new StringBuffer("Status modifié : dispositif="+s+"/status=");
+                switch (i) {
+                    case LocationProvider.AVAILABLE:
+                        buf.append("En service");
+                        Integer t = (Integer)bundle.get("satellites");
+                        if (t != null)
+                            buf.append("satelittes="+t);
+                        break;
+                    case LocationProvider.OUT_OF_SERVICE:
+                        buf.append("Hors service");
+                        break;
+                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                        buf.append("Tenporairement indisponible");
+                        break;
+                    default:
+                        break;
+                }
+                Log.d(TAG, buf.toString());
+                //Toast.makeText(mMapActivity, buf, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+                Log.d(TAG, "Dispositif activé : "+s);
+                String msg = String.format("The provider"+ s +"is now enabled");
+                Toast.makeText(frag.getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+                Log.d(TAG, "Dispositif désactivé : "+s);
+                String msg = String.format("The provider"+ s +"is now disabled");
+                Toast.makeText(frag.getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 
     public MyLocationOverlay(Location _location, MapsActivity g) {
         mMapActivity = g;

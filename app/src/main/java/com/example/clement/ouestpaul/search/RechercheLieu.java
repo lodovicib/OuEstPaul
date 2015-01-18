@@ -1,5 +1,8 @@
 package com.example.clement.ouestpaul.search;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.clement.ouestpaul.JSONParser;
@@ -34,6 +37,10 @@ public class RechercheLieu {
     private static final String TAG_ETABLI = "Etablissements";
     JSONArray user = null;
     private static String url = "https://gist.githubusercontent.com/anonymous/c0611f9df6eec247ee45/raw/1ac8f80694c078395b9aa404e482bfc734e4b9d3/map.geojson";
+
+    private Context lecontext;
+
+
 
     public static enum TypeRecherche {
         /** Type batiment */

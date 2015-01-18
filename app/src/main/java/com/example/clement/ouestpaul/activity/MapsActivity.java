@@ -18,6 +18,9 @@ import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -64,38 +67,14 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
     private static long MINDISTANCE = 10;
     private static long MINTIME = 10000;
 
-/*     public static final String PIPELINE_NAME = "default";
-    private FunfManager funfManager = null;
-    private BasicPipeline pipeline;
-    private WifiProbe wifiProbe;
-    private SimpleLocationProbe locationProbe;
-    private Handler handler;
-   private ServiceConnection funfManagerConn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-
-            funfManager = ((FunfManager.LocalBinder)service).getManager();
-
-            Gson gson = funfManager.getGson();
-            wifiProbe = gson.fromJson(new JsonObject(), WifiProbe.class);
-            locationProbe = gson.fromJson(new JsonObject(), SimpleLocationProbe.class);
-            pipeline = (BasicPipeline) funfManager.getRegisteredPipeline(PIPELINE_NAME);
-            wifiProbe.registerPassiveListener(MapsActivity.this);
-            locationProbe.registerPassiveListener(MapsActivity.this);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            funfManager = null;
-        }
-    };*/
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         initButton();
-        final Handler mHandler = new Handler();
+       // MenuActivity menu = new MenuActivity();
+       // menu.onCreate(savedInstanceState);
+        /*final Handler mHandler = new Handler();
         final Runnable toRun = new Runnable() {
             @Override
             public void run() {
@@ -117,9 +96,8 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
             }
         };
         mHandler.postDelayed(toRun, 10000);
+*/
 
-
-       // handler = new Handler();
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             critere = new Criteria();
@@ -130,7 +108,7 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
                 provider = LocationManager.GPS_PROVIDER;
             else
                 provider = LocationManager.NETWORK_PROVIDER;
-            Thread t = new Thread(new Runnable() {
+/*            Thread t = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -143,7 +121,7 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
                     }
                 }
             });
-            t.start();
+            t.start();*/
 
         } catch (Exception e) {
 
@@ -157,9 +135,18 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
     private void initButton() {
         button_carte = (Button) findViewById(R.id.button_carte);
         button_carte.setVisibility(View.INVISIBLE);
-        button_pieton = (Button) findViewById(R.id.button_pieton);
+      /*  button_pieton = (Button) findViewById(R.id.button_pieton);
         button_velo = (Button) findViewById(R.id.button_velo);
-        button_voiture = (Button) findViewById(R.id.button_voiture);
+        button_voiture = (Button) findViewById(R.id.button_voiture);*/
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+  //      getMenuInflater().inflate(R.menu.menu, menu);
+   //     return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -204,16 +191,7 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
                 mMap.setMyLocationEnabled(true);
                 setUpMap();
             }
-        }// else
-           // setUpMap();
-            // else if (curLocation != null && loc != null) {
-           // Log.d("test", "Location reçue dans la boucle avant : "+curLocation.getLatitude());
-
-           /* if (!loc.sameLocation(curLocation)) {
-                loc.getLocationListener().onLocationChanged(curLocation);
-                setUpMap();
-            }*/
-       // }
+        }
     }
 
     private void setUpMap() {
@@ -229,15 +207,17 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
     }
 
     public void onClick_button_Recherche(View v) {
-        Intent intent = new Intent(MapsActivity.this, SearchActivity.class);
-        startActivityForResult(intent, 1);
+        Intent intent = new Intent(MapsActivity.this, MenuActivity.class);
+        startActivity(intent);
+//        Intent intent = new Intent(MapsActivity.this, SearchActivity.class);
+ //       startActivityForResult(intent, 1);
     }
 
     public void onClick_button_SousCarte(View v) {
         String geoUriString = "http://maps.google.com/maps?" +
                 "saddr=" + loc.getLatitude()+ "," + loc.getLongitude()  +
                 "&daddr=" + arrivee.latitude + "," + arrivee.longitude;
-        switch (v.getId()) {
+    /*    switch (v.getId()) {
             case R.id.button_pieton:
                 geoUriString += "&directionsmode=walking";
                 break;
@@ -247,7 +227,7 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
            /* case R.id.button_voiture:
                 geoUriString += "&directionsmode=driving";
                 break;*/
-        }
+        //}
         Intent mapCall = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUriString));
         startActivity(mapCall);
     }
@@ -365,4 +345,14 @@ public class MapsActivity extends FragmentActivity /*implements Probe.DataListen
             }
         });
     }*/
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if(R.id.recherche == item.getItemId()) {
+            Toast.makeText(getBaseContext(), "click ", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MapsActivity.this, MenuActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
