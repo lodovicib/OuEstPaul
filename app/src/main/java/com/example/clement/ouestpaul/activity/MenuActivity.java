@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.example.clement.ouestpaul.ExpandableAdapter;
 import com.example.clement.ouestpaul.R;
 import com.example.clement.ouestpaul.fragment.MapsFragment;
+import com.example.clement.ouestpaul.fragment.ParamFragment;
 import com.example.clement.ouestpaul.interfaces.IMarkLieu;
 import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
 import com.example.clement.ouestpaul.lieux.Batiment;
@@ -76,7 +77,7 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     private CharSequence mTitle;
     private String[] mPlanetTitles;
 
-
+private android.support.v4.app.FragmentManager fragmentManager;
 
 
 
@@ -369,11 +370,27 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
 
     @Override
     public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-        if (i == 0 || i == 2) {
+        if (i == 0) {
             selectItem(0);
+        } else if (i == 2) {
+
+           // Fragment fragmentNew = new ParamFragment();
+            fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().hide(fragment);
+            //fragmentManager.beginTransaction().add(R.id.content_frame, fragmentNew);
+
+            //fragmentManager.beginTransaction().commit();
+
+            //fragment = fragmentNew;
+
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(i, true);
+            setTitle(mPlanetTitles[i]);
+            mDrawerLayout.closeDrawer(mDrawerList);
         }
+
         view.setSelected(true);
-        mDrawerList.setItemChecked(i, true);
+       // mDrawerList.setItemChecked(i, true);
        //mDrawerList.setSelectedGroup(i);
         return false;
     }
@@ -432,14 +449,9 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     }
 
     private void selectItem(int position) {
-        //Bundle args = new Bundle();
-    //    args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-      //  fragment.setArguments(args);
         fragment = new MapsFragment();
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);

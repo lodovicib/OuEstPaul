@@ -108,9 +108,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-            Log.d("MyApp", "getGroupView group : " + groupPosition+ " size : "+isExpanded);
-           //if (groupPosition >= getGroupCount())
-             //     groupPosition = getGroupCount() - 1;
                if (convertView == null) {
                    convertView = minflater.inflate(R.layout.drawer_list_item, parent, false);
                }

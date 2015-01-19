@@ -282,4 +282,24 @@ public class MapsFragment extends Fragment {
         builder.show();
     }
 
+    @Override
+    public void onDestroyView() {
+
+        SupportMapFragment f = (SupportMapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+
+        if (f != null) {
+            try {
+                getFragmentManager().beginTransaction().remove(f).commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        super.onDestroyView();
+    }
+
+
 }
