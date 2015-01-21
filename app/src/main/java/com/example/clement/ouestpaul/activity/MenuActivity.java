@@ -1,12 +1,9 @@
 package com.example.clement.ouestpaul.activity;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -38,12 +35,8 @@ import com.example.clement.ouestpaul.ExpandableAdapter;
 import com.example.clement.ouestpaul.R;
 import com.example.clement.ouestpaul.fragment.MapsFragment;
 import com.example.clement.ouestpaul.fragment.ParamFragment;
-import com.example.clement.ouestpaul.interfaces.IMarkLieu;
 import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
-import com.example.clement.ouestpaul.lieux.Batiment;
 import com.example.clement.ouestpaul.lieux.Lieu;
-import com.example.clement.ouestpaul.location.MyLocationOverlay;
-import com.example.clement.ouestpaul.location.Position;
 import com.example.clement.ouestpaul.search.ArrayResultsSearchAdaptater;
 import com.example.clement.ouestpaul.search.RechercheLieu;
 
@@ -60,7 +53,8 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
         SearchView.OnCloseListener, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
     private boolean favorisopen = false;
-    private SharedPreferences prefs;
+    private boolean tracking;
+    private SharedPreferences prefs, parametres;
     private ListView listResultats, listFavoris, listResultRechercheA;
     private SearchView editRecherche;
     private RechercheLieu listeLieux;
@@ -77,9 +71,7 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     private CharSequence mTitle;
     private String[] mPlanetTitles;
 
-private android.support.v4.app.FragmentManager fragmentManager;
-
-
+    private android.support.v4.app.FragmentManager fragmentManager;
 
     @Override
     protected void onResume() {
@@ -92,6 +84,7 @@ private android.support.v4.app.FragmentManager fragmentManager;
         super.onPause();
 
     }
+
     ArrayList<Object> childItem = new ArrayList<Object>();
 
     public void setChildGroupData() {
@@ -180,22 +173,28 @@ private android.support.v4.app.FragmentManager fragmentManager;
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
-
         listeLieux = new RechercheLieu();
+        parametres = getSharedPreferences("parametres", Context.MODE_PRIVATE);
+        if (!parametres.contains("autorizeTracking")){
+            SharedPreferences.Editor editor = parametres.edit();
+            editor.putBoolean("autorizeTracking", true);
+            editor.apply();
+            tracking = true;
+        } else
+            tracking = parametres.getBoolean("autorizeTracking", true);
         prefs = getPreferences(Context.MODE_PRIVATE);
         favoris = prefs.getAll();
         if (favoris.size() > 0) {
             for (String key : favoris.keySet()) {
-                Lieu lieu = listeLieux.getLieuWithIdType(Integer.valueOf(key.toString()), (String) favoris.get(key));
-                if (lieu != null)
-                    lieu.setFavorite(true);
-            }
+                    Lieu lieu = listeLieux.getLieuWithIdType(Integer.valueOf(key.toString()), (String) favoris.get(key));
+                    if (lieu != null)
+                        lieu.setFavorite(true);
+                }
         }
        // editRecherche = (SearchView) findViewById(R.id.searchView);
-
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
         this.listResultats = (ListView) findViewById(R.id.listView);
         this.listFavoris = (ListView) findViewById(R.id.listFavoris);
         listFavoris.setVisibility(View.INVISIBLE);
@@ -234,9 +233,8 @@ private android.support.v4.app.FragmentManager fragmentManager;
         Bundle bundle = new Bundle();
         bundle.putSerializable("lieu", item);
         fragment.setArguments(bundle);
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment).commit();
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
     public void onClickFavoris(Lieu item, View rowView) {
@@ -370,27 +368,10 @@ private android.support.v4.app.FragmentManager fragmentManager;
 
     @Override
     public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-        if (i == 0) {
-            selectItem(0);
-        } else if (i == 2) {
-
-           // Fragment fragmentNew = new ParamFragment();
-            fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().hide(fragment);
-            //fragmentManager.beginTransaction().add(R.id.content_frame, fragmentNew);
-
-            //fragmentManager.beginTransaction().commit();
-
-            //fragment = fragmentNew;
-
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(i, true);
-            setTitle(mPlanetTitles[i]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-        }
-
+        if (i != 1)
+            selectItem(i);
         view.setSelected(true);
-       // mDrawerList.setItemChecked(i, true);
+       //mDrawerList.setItemChecked(i, true);
        //mDrawerList.setSelectedGroup(i);
         return false;
     }
@@ -449,7 +430,14 @@ private android.support.v4.app.FragmentManager fragmentManager;
     }
 
     private void selectItem(int position) {
-        fragment = new MapsFragment();
+        if (position == 0) {
+            tracking = parametres.getBoolean("autorizeTracking", true);
+            fragment = new MapsFragment();
+        }
+        else if (position == 2)
+            fragment = new ParamFragment();
+        else
+            fragment = new ParamFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
         mDrawerList.setItemChecked(position, true);

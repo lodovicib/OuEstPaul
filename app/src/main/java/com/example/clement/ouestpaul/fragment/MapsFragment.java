@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -47,6 +48,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by Adrien on 11/01/2015.
  */
 public class MapsFragment extends Fragment {
+    private static long MINDISTANCE = 10;
+    private static long MINTIME = 10000;
+    private static View v;
     private boolean menuopen = false;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager locationManager;
@@ -57,69 +61,50 @@ public class MapsFragment extends Fragment {
     private LatLng arrivee;
     private String best;
     private String provider;
-    private static long MINDISTANCE = 10;
-    private static long MINTIME = 10000;
     private Bundle saved;
-    private static View v;
 
-  /*  @Override
-    protected void onResume() {
-        super.onResume();
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
-        setUpMapIfNeeded();
-    }
+    /*  @Override
+      protected void onResume() {
+          super.onResume();
+          locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+          loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
+          setUpMapIfNeeded();
+      }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        locationManager.removeUpdates(loc.getLocationListener());
-    }
+      @Override
+      protected void onPause() {
+          super.onPause();
+          locationManager.removeUpdates(loc.getLocationListener());
+      }
 
-*/
+  */
     public MapsFragment() {
         super();
         // Just to be an empty Bundle. You can use this later with getArguments().set...
         setArguments(new Bundle());
     }
 
-/*    public void onAttach(Activity activity) {
-        if (!(activity instanceof IMarkLieu))
-            throw new ClassCastException();
-        super.onAttach(activity);
-    }
-*/
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (v != null) {
-            ViewGroup parent = (ViewGroup) v.getParent();
-            if (parent != null)
-                parent.removeView(v);
-        }
-        try {
-            v = inflater.inflate(R.layout.activity_maps, container, false);
-        } catch (InflateException e) {
-    /* map is already there, just return view as it is */
-        }
-
-        Lieu test = (Lieu) getArguments().getSerializable("lieu");
-        saved = savedInstanceState;
+    /* Initialisation du boutton de lancement de l'itinéraire */
+    public void init_button() {
         button_carte = (Button) v.findViewById(R.id.button_carte);
         button_carte.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-               onClick_button_Carte(v);
+                onClick_button_Carte(v);
             }
         });
         button_carte.setVisibility(View.INVISIBLE);
-         /*final Handler mHandler = new Handler();
+    }
+
+    /* Lance un thread qui envoie tous les ..... un json avec le déplacement de l'user */
+    public void tracking() {
+        final Handler mHandler = new Handler();
         final Runnable toRun = new Runnable() {
             @Override
             public void run() {
                 Thread t = new Thread(new Runnable() {
-
                     @Override
                     public void run() {
                         JSONParser parser = new JSONParser();
@@ -136,60 +121,64 @@ public class MapsFragment extends Fragment {
             }
         };
         mHandler.postDelayed(toRun, 10000);
-*/
+    }
 
+    public void init_location() {
+        locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        critere = new Criteria();
+        critere.setAccuracy(Criteria.ACCURACY_FINE);
+        best = locationManager.getBestProvider(critere, true);
+        loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
+        if (best.equals("gps"))
+            provider = LocationManager.GPS_PROVIDER;
+        else
+            provider = LocationManager.NETWORK_PROVIDER;
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (v != null) {
+            ViewGroup parent = (ViewGroup) v.getParent();
+            if (parent != null)
+                parent.removeView(v);
+        }
         try {
-            locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-            critere = new Criteria();
-            critere.setAccuracy(Criteria.ACCURACY_FINE);
-            best = locationManager.getBestProvider(critere, true);
-            loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
-            if (best.equals("gps"))
-                provider = LocationManager.GPS_PROVIDER;
-            else
-                provider = LocationManager.NETWORK_PROVIDER;
-
-/*            Thread t = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    JSONParser parser = new JSONParser();
-                    try {
-                        parser.makeRequest("http:/192.168.1.91:8080/apiDev/tracking/addTrack");
-                    }
-                    catch(Exception e) {
-                        Log.e("Problem", e.getClass() + ": " + e.getMessage());
-                    }
-                }
-            });
-            t.start();*/
-
+            v = inflater.inflate(R.layout.activity_maps, container, false);
+        } catch (InflateException e) {
+    /* map is already there, just return view as it is */
+        }
+        Lieu resultLieu = (Lieu) getArguments().getSerializable("lieu");
+        saved = savedInstanceState;
+        init_button();
+         /* tracking(); */
+        try {
+            if (locationManager == null)
+                init_location();
         } catch (Exception e) {
-
             Log.e("HEY", e.getClass() + " : " + e.getMessage());
         }
         setUpMapIfNeeded();
-        if (test != null) {
-            onActivityResult(test);
-        }
+        /* Vérifie si on doit afficher un marker */
+        if (resultLieu != null)
+            affMarker(resultLieu);
         return v;
     }
 
-    public void onActivityResult(Lieu mPerson) {
-            mMap.clear();
-            arrivee = new LatLng(mPerson.getCoordonnee().getX(), mPerson.getCoordonnee().getY());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(arrivee);
-            markerOptions.title(mPerson.toString());
-            markerOptions.snippet(mPerson.getDesc());
-            mMap.addMarker(markerOptions);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(arrivee, 15.0f));
-            button_carte.setVisibility(View.VISIBLE);
-            button_carte.setEnabled(true);
-    //    }
+    /* Affiche un marker */
+    public void affMarker(Lieu resultLieu) {
+        mMap.clear();
+        arrivee = new LatLng(resultLieu.getCoordonnee().getX(), resultLieu.getCoordonnee().getY());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(arrivee);
+        markerOptions.title(resultLieu.toString());
+        markerOptions.snippet(resultLieu.getDesc());
+        mMap.addMarker(markerOptions);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(arrivee, 15.0f));
+        button_carte.setVisibility(View.VISIBLE);
+        button_carte.setEnabled(true);
     }
 
+    /* Vérification si la map est instancier et si on peut mettre à jour les données */
     private void setUpMapIfNeeded() {
         if (mMap == null) {
             mMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map))
@@ -220,8 +209,11 @@ public class MapsFragment extends Fragment {
             }
         }
     }
+
+    /* MàJ de la map */
     private void setUpMap() {
         if (locationManager.isProviderEnabled(provider)) {
+            loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
             locationManager.requestLocationUpdates(provider, MINTIME, MINDISTANCE, loc.getLocationListener());
             mMap.setMyLocationEnabled(true);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15.0f));
@@ -232,28 +224,11 @@ public class MapsFragment extends Fragment {
         }
     }
 
-/*    public void onClick_button_SousCarte(View v) {
-        String geoUriString = "http://maps.google.com/maps?" +
-                "saddr=" + loc.getLatitude()+ "," + loc.getLongitude()  +
-                "&daddr=" + arrivee.latitude + "," + arrivee.longitude;
-        switch (v.getId()) {
-            case R.id.button_pieton:
-                geoUriString += "&directionsmode=walking";
-                break;
-            case R.id.button_velo:
-                geoUriString += "&directionsmode=bicycling";
-                break;
-           /* case R.id.button_voiture:
-                geoUriString += "&directionsmode=driving";
-                break;
-        }
-        Intent mapCall = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUriString));
-        startActivity(mapCall);
-    }*/
-
+    /* Si on click sur le boutton "Y aller" */
     public void onClick_button_Carte(View v) {
         float[] results = {0};
         if (locationManager.isProviderEnabled(provider)) {
+            loc = new MyLocationOverlay(locationManager.getLastKnownLocation(best), this);
             locationManager.requestLocationUpdates(provider, MINTIME, MINDISTANCE, loc.getLocationListener());
             Location.distanceBetween(loc.getLatitude(), loc.getLongitude(), arrivee.latitude, arrivee.longitude, results);
             if (results[0] < 1750) {
@@ -268,6 +243,7 @@ public class MapsFragment extends Fragment {
             alert("Oh non !", "Je n'arrive pas à récuperer votre position.");
     }
 
+    /* Affiche une boite de dialogue */
     private void alert(String title, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
@@ -281,25 +257,5 @@ public class MapsFragment extends Fragment {
         //alertDialog.setIcon(R.drawable.icon);
         builder.show();
     }
-
-    @Override
-    public void onDestroyView() {
-
-        SupportMapFragment f = (SupportMapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-
-        if (f != null) {
-            try {
-                getFragmentManager().beginTransaction().remove(f).commit();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        super.onDestroyView();
-    }
-
 
 }

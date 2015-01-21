@@ -103,9 +103,15 @@ t.start();
         }
 
         Batiment b1 = new Batiment(1, "U1", new Position(43.560304, 1.470264));
-      //  b1.setFavorite(true);
         Batiment b2 = new Batiment(2, "U2", new Position(43.561322, 1.470526));
         Batiment b8 = new Batiment(8, "3TP2", new Position(43.560965, 1.467803));
+        Batiment b9 = new Batiment(9, "U4", new Position(43.562703, 1.469192));
+        Batiment b10 = new Batiment(10, "3A", new Position(43.560172, 1.469249));
+        Batiment b11 = new Batiment(11, "U3", new Position(43.561961, 1.469963));
+        Batiment b12 = new Batiment(12, "1A", new Position(43.56224, 1.467181));
+        Batiment b13 = new Batiment(13, "2A", new Position(43.563835, 1.46655));
+        Batiment b14 = new Batiment(14, "4A", new Position(43.558419, 1.470171));
+        Batiment b15 = new Batiment(15, "1R3", new Position(43.561682, 1.465903));
 
         Salle s1 = new Salle(1, "Mathis", new Position(43.560304, 1.470264), b1);
         Salle s2 = new Salle(2, "Borel", new Position(43.561322, 1.470526), b2);
@@ -114,8 +120,27 @@ t.start();
         Salle s5 = new Salle(5, "De Broglie", new Position(43.561322, 1.470526), b2);
         Salle s6 = new Salle(6, "Denjoy", new Position(43.560304, 1.470264), b1);
         Salle s7 = new Salle(7, "Einstein", new Position(43.560965, 1.467803), b8);
+        Salle s9 = new Salle(9, "Baillaud", new Position(43.562703, 1.469192), b9);
+        Salle s10 = new Salle(10, "Concorde", new Position(43.562703, 1.469192), b9);
+        Salle s15 = new Salle(15, "Shannon", new Position(43.562703, 1.469192), b9);
+        Salle s23 = new Salle(23, "Turing", new Position(43.562703, 1.469192), b9);
+        Salle s24 = new Salle(24, "Langevin", new Position(43.560172, 1.469249), b10);
+        Salle s8 = new Salle(8, "Ampère", new Position(43.560172, 1.469249), b10);
+        Salle s11 = new Salle(11, "Cotton", new Position(43.560172, 1.469249), b10);
+        Salle s12 = new Salle(12, "Curie", new Position(43.560172, 1.469249), b10);
+        Salle s13 = new Salle(13, "Daurat", new Position(43.561961, 1.469963), b11);
+        Salle s14 = new Salle(14, "Fermat", new Position(43.56224, 1.467181), b12);
+        Salle s25 = new Salle(25, "Stieltjes", new Position(43.56224, 1.467181), b12);
+        Salle s20 = new Salle(20, "Maxwell", new Position(43.560965, 1.467803), b8);
+        Salle s16 = new Salle(16, "Grignard", new Position(43.563835, 1.46655), b13);
+        Salle s18 = new Salle(18, "Le Chatelier", new Position(43.563835, 1.46655), b13);
+        Salle s19 = new Salle(19, "Leclerc du Sablon", new Position(43.558419, 1.470171), b14);
+        Salle s21 = new Salle(21, "Molliard", new Position(43.558419, 1.470171), b14);
+        Salle s22 = new Salle(22, "Schwartz", new Position(43.561682, 1.465903), b15);
 
-
+        lieux.push(s23);
+        lieux.push(s24);
+        lieux.push(s25);
         lieux.push(s1);
         lieux.push(s2);
         lieux.push(s3);
@@ -123,6 +148,20 @@ t.start();
         lieux.push(s5);
         lieux.push(s6);
         lieux.push(s7);
+        lieux.push(s8);
+        lieux.push(s9);
+        lieux.push(s10);
+        lieux.push(s11);
+        lieux.push(s12);
+        lieux.push(s13);
+        lieux.push(s14);
+        lieux.push(s15);
+        lieux.push(s16);
+        lieux.push(s22);
+        lieux.push(s18);
+        lieux.push(s19);
+        lieux.push(s20);
+        lieux.push(s21);
     }
 
     /**********************************************************/
