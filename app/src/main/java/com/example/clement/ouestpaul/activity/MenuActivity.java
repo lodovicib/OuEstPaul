@@ -32,7 +32,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.clement.ouestpaul.ExpandableAdapter;
+import com.example.clement.ouestpaul.GestionServices;
 import com.example.clement.ouestpaul.R;
+import com.example.clement.ouestpaul.fragment.ContactFragment;
 import com.example.clement.ouestpaul.fragment.MapsFragment;
 import com.example.clement.ouestpaul.fragment.ParamFragment;
 import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
@@ -71,7 +73,11 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     private CharSequence mTitle;
     private String[] mPlanetTitles;
 
+    private GestionServices listServices;
+
     private android.support.v4.app.FragmentManager fragmentManager;
+    private int pos;
+    private ArrayList<Object> childItem = new ArrayList<Object>();
 
     @Override
     protected void onResume() {
@@ -85,22 +91,11 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
 
     }
 
-    ArrayList<Object> childItem = new ArrayList<Object>();
-
     public void setChildGroupData() {
-        /**
-         * Add Data For TecthNology
-         */
         ArrayList<String> child = new ArrayList<String>();
         childItem.add(child);
-        /**
-         * Add Data For Mobile
-         */
+        childItem.add(listServices.getTypesServices());
         child = new ArrayList<String>();
-        child.add("Machine à café");
-        child.add("Distrib. de boissons");
-        child.add("Distrib. de nourritures");
-        child.add("Recharge monéo");
         childItem.add(child);
         child = new ArrayList<String>();
         childItem.add(child);
@@ -112,6 +107,7 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listServices = new GestionServices();
         setChildGroupData();
 
         mTitle = mDrawerTitle = getTitle();
@@ -360,9 +356,16 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i2, long l) {
    //     Toast.makeText(this, "Clicked On Child" + view.getTag(),
      //           Toast.LENGTH_SHORT).show();
+        setTitle(mPlanetTitles[i] +" : "+view.getTag().toString());
         view.setSelected(true);
-        mDrawerList.setItemChecked(i2, true);
+        mDrawerList.setItemChecked(i, true);
         mDrawerLayout.closeDrawer(mDrawerList);
+        fragment = new MapsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("listService", listServices.getListServiceByName(view.getTag().toString()));
+        fragment.setArguments(bundle);
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
         return true;
     }
 
@@ -390,54 +393,41 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //      getMenuInflater().inflate(R.menu.menu, menu);
-        //     return true;
+
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.recherche);
-
-        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-        editRecherche = (SearchView) searchItem.getActionView();
-        editRecherche.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
-        editRecherche.setOnQueryTextListener( this);
-        editRecherche.setOnCloseListener(this);
-        if (isAlwaysExpanded()) {
-            editRecherche.setIconifiedByDefault(false);
-        } else {
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-    }
-        // When using the support library, the setOnActionExpandListener() method is
-        // static and accepts the MenuItem object as an argument
-      /*  MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Do something when collapsed
-                return true;  // Return true to collapse action view
+        if (pos > 1 || mDrawerLayout.isDrawerOpen(mDrawerList))
+            inflater.inflate(R.menu.search, menu);
+        else {
+            inflater.inflate(R.menu.menu, menu);
+            MenuItem searchItem = menu.findItem(R.id.recherche);
+            SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            editRecherche = (SearchView) searchItem.getActionView();
+            editRecherche.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+            editRecherche.setOnQueryTextListener(this);
+            editRecherche.setOnCloseListener(this);
+            if (isAlwaysExpanded()) {
+                editRecherche.setIconifiedByDefault(false);
+            } else {
+                searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                        | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             }
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                // Do something when expanded
-                return true;  // Return true to expand action view
-            }
-        });*/
-
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     private void selectItem(int position) {
+        pos = position;
         if (position == 0) {
             tracking = parametres.getBoolean("autorizeTracking", true);
             fragment = new MapsFragment();
         }
         else if (position == 2)
             fragment = new ParamFragment();
+        else if (position == 3)
+            fragment = new ContactFragment();
         else
-            fragment = new ParamFragment();
+            fragment = new MapsFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
         mDrawerList.setItemChecked(position, true);

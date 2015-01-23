@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -37,6 +39,7 @@ public class ParamFragment extends Fragment {
         } catch (InflateException e) {
             Log.e("MyApp", "Probleme "+e.toString());
         }
+        setHasOptionsMenu(true);
         dataParam = this.getActivity().getSharedPreferences("parametres", Context.MODE_PRIVATE);
         editor = dataParam.edit();
         track = (Switch) v.findViewById(R.id.switch1);
@@ -52,6 +55,11 @@ public class ParamFragment extends Fragment {
             }
           });
         return v;
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search, menu);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.clement.ouestpaul.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,14 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,21 +23,17 @@ import android.widget.Toast;
 
 import com.example.clement.ouestpaul.JSONParser;
 import com.example.clement.ouestpaul.R;
-import com.example.clement.ouestpaul.activity.MenuActivity;
-import com.example.clement.ouestpaul.interfaces.IMarkLieu;
 import com.example.clement.ouestpaul.lieux.Lieu;
+import com.example.clement.ouestpaul.lieux.Service;
 import com.example.clement.ouestpaul.location.MyLocationOverlay;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 /**
  * Created by Adrien on 11/01/2015.
@@ -148,6 +139,7 @@ public class MapsFragment extends Fragment {
     /* map is already there, just return view as it is */
         }
         Lieu resultLieu = (Lieu) getArguments().getSerializable("lieu");
+        ArrayList<Service> resultServices = (ArrayList<Service>) getArguments().getSerializable("listService");
         saved = savedInstanceState;
         init_button();
          /* tracking(); */
@@ -161,7 +153,21 @@ public class MapsFragment extends Fragment {
         /* Vérifie si on doit afficher un marker */
         if (resultLieu != null)
             affMarker(resultLieu);
+        else if (resultServices != null)
+            affMarkerServices(resultServices);
         return v;
+    }
+
+    public void affMarkerServices(ArrayList<Service> resultServices) {
+        mMap.clear();
+        MarkerOptions markerOptions = new MarkerOptions();
+        for (Service s : resultServices) {
+            markerOptions.position(new LatLng(s.getCoordonnee().getX(), s.getCoordonnee().getY()));
+            markerOptions.title(s.getNom());
+            //markerOptions.snippet(resultLieu.getDesc());
+            mMap.addMarker(markerOptions);
+        }
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.563123, 1.466139), 15.0f));
     }
 
     /* Affiche un marker */
@@ -196,6 +202,9 @@ public class MapsFragment extends Fragment {
                     TextView textTitle = (TextView) v.findViewById(R.id.title);
                     TextView textMsg = (TextView) v.findViewById(R.id.msg);
                     textTitle.setText(title);
+                    button_carte.setVisibility(View.VISIBLE);
+                    button_carte.setEnabled(true);
+                    arrivee = arg0.getPosition();
                     if (msg == null)
                         textMsg.setVisibility(View.INVISIBLE);
                     else

@@ -223,23 +223,25 @@ t.start();
 
     public final ArrayList<String> getEtablissements() {
         ArrayList<String> ls = new ArrayList<String>();
-ls.add("Tous");
+
         for (Lieu l : lieux) {
             if (!ls.contains(l.getEtablissement()) && l.getEtablissement() != null)
                 ls.add(l.getEtablissement());
         }
         Collections.sort(ls);
+        ls.add("Tous");
         return ls;
     }
 
     public final ArrayList<String> getActivites() {
         ArrayList<String> ls = new ArrayList<String>();
-        ls.add("Tous");
+
         for (Lieu l : lieux) {
             if (!ls.contains(l.getActivite()) && l.getActivite() != null && !l.getActivite().equals("null"))
                 ls.add(l.getActivite());
         }
         Collections.sort(ls);
+        ls.add("Tous");
         return ls;
     }
     /**********************************************************/
