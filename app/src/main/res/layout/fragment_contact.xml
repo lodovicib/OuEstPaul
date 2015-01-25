@@ -67,9 +67,10 @@
         android:text="Envoyer"
         android:id="@+id/buttonContact"
         android:textStyle="bold"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+
         android:background="#fff0a464"
         android:layout_below="@+id/messageContact"
         android:layout_alignEnd="@+id/messageContact"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="15dp"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

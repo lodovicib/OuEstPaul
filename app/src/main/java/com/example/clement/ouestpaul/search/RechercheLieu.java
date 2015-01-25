@@ -57,7 +57,7 @@ public class RechercheLieu {
         lieux = new LinkedList<Lieu>();
         JSONParser jParser = new JSONParser();
         try {
-            jParser.makeRequest("http://10.0.2.2/apiDev/tracking/addTrack");
+         //   jParser.makeRequest("http://10.0.2.2/apiDev/tracking/addTrack");
         } catch (Exception e) {
             e.printStackTrace();
         }

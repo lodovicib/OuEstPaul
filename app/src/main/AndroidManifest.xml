@@ -12,6 +12,7 @@
             android:name=".activity.MainSplashScreen"
             android:label="@string/title_activity_maps"
             android:theme="@style/WelcomeTheme"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,23 +32,46 @@
             android:label="@string/title_activity_search" >
         </activity>
 
-                <activity
-                    android:name=".activity.MenuActivity"
-                    android:label="Menu"
-                    android:theme="@style/QueryTheme">
-                </activity>
-        <!--         <service android:name="edu.mit.media.funf.FunfManager">
-                     <meta-data android:name="default" android:value="@string/default_pipeline"/>
-                 </service>
-                 <receiver android:name="edu.mit.media.funf.Launcher" android:enabled="true">
-                     <intent-filter>
-                         <action android:name="android.intent.action.BATTERY_CHANGED" />
-                         <action android:name="android.intent.action.BOOT_COMPLETED" />
-                         <action android:name="android.intent.action.DOCK_EVENT" />
-                         <action android:name="android.intent.action.ACTION_SCREEN_ON" />
-                         <action android:name="android.intent.action.USER_PRESENT" />
-                     </intent-filter>
-                 </receiver> -->
+
+        <!--     <meta-data
+               android:name="android.app.default_searchable"
+               android:value=".SearchActivity" /> -->
+
+       <activity
+           android:name=".activity.MenuActivity"
+           android:label="Menu"
+           android:icon="@drawable/ic_launcher"
+           android:theme="@style/QueryTheme"
+           android:screenOrientation="portrait"
+           >
+           <intent-filter>
+               <action android:name="android.intent.action.SEARCH" />
+               <category android:name="android.intent.category.DEFAULT" />
+           </intent-filter>
+           <meta-data
+               android:name="android.app.default_searchable"
+               android:value=".activity.MenuActivity" />
+           <meta-data
+               android:name="android.app.searchable"
+               android:resource="@xml/searchable" />
+         </activity>
+          <!--         <activity
+                      android:name=".activity.MenuActivity"
+                      android:label="Menu"
+                      android:theme="@style/QueryTheme">
+                  </activity>
+                  <service android:name="edu.mit.media.funf.FunfManager">
+                       <meta-data android:name="default" android:value="@string/default_pipeline"/>
+                   </service>
+                   <receiver android:name="edu.mit.media.funf.Launcher" android:enabled="true">
+                       <intent-filter>
+                           <action android:name="android.intent.action.BATTERY_CHANGED" />
+                           <action android:name="android.intent.action.BOOT_COMPLETED" />
+                           <action android:name="android.intent.action.DOCK_EVENT" />
+                           <action android:name="android.intent.action.ACTION_SCREEN_ON" />
+                           <action android:name="android.intent.action.USER_PRESENT" />
+                       </intent-filter>
+                   </receiver> -->
       </application>
 
       <uses-permission android:name="android.permission.INTERNET" />

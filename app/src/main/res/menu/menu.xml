@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:iosched="http://schemas.android.com/apk/res-auto"
     android:id="@+id/action_menu"
     android:layout_width="match_parent" android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,12 +9,14 @@
     <item android:id="@+id/favoris"
         android:icon="@drawable/ic_star_fav"
         android:title="Favoris"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        iosched:showAsAction="ifRoom"/>
 
     <item android:id="@+id/recherche"
         android:icon="@drawable/action_search"
         android:showAsAction="always|collapseActionView"
-        android:actionViewClass="android.support.v7.widget.SearchView"
+        iosched:showAsAction="always|collapseActionView"
+        iosched:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Recherche"
 
       />

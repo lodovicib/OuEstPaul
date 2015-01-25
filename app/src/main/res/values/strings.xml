@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="primaryColor">#2196F3</color>
+    <color name="primaryColorDark">#0D47A1</color>
+
     <color name="pressed_color">#fff0a464</color>
     <string name="app_name">OuEstPaul</string>
     <string name="title_activity_maps">OuEstPaul</string>
@@ -11,17 +15,20 @@
     <string-array name="planets_array">
         <item>Accueil</item>
         <item>Services</item>
+        <item>Liens utiles</item>
         <item>Paramètres</item>
         <item>Contact</item>
     </string-array>
     <string-array name="icons_array">
         <item>@drawable/ic_action_map</item>
         <item>@drawable/ic_action_storage</item>
+        <item>@drawable/ic_action_share</item>
         <item>@drawable/ic_action_settings</item>
-        <item>@drawable/ic_action_settings</item>
+        <item>@drawable/ic_action_email</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-
+    <string name="search_hint">Recherche</string>
+    <string name="search_label">Rechercher</string>
 </resources>

@@ -1,12 +1,14 @@
 package com.example.clement.ouestpaul.activity;
 
 import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import com.example.clement.ouestpaul.ExpandableAdapter;
 import com.example.clement.ouestpaul.GestionServices;
 import com.example.clement.ouestpaul.R;
 import com.example.clement.ouestpaul.fragment.ContactFragment;
+import com.example.clement.ouestpaul.fragment.LinkFragment;
 import com.example.clement.ouestpaul.fragment.MapsFragment;
 import com.example.clement.ouestpaul.fragment.ParamFragment;
 import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
@@ -51,9 +55,10 @@ import java.util.Map;
 /**
  * Created by Adrien on 11/01/2015.
  */
-public class MenuActivity extends FragmentActivity implements LieuAdapterListener, SearchView.OnQueryTextListener,
+public class MenuActivity extends ActionBarActivity  implements LieuAdapterListener, SearchView.OnQueryTextListener,
         SearchView.OnCloseListener, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
+    private Toolbar toolbar;
     private boolean favorisopen = false;
     private boolean tracking;
     private SharedPreferences prefs, parametres;
@@ -95,6 +100,8 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
         ArrayList<String> child = new ArrayList<String>();
         childItem.add(child);
         childItem.add(listServices.getTypesServices());
+        child = new ArrayList<String>();
+        childItem.add(child);
         child = new ArrayList<String>();
         childItem.add(child);
         child = new ArrayList<String>();
@@ -143,27 +150,30 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
         });
        mDrawerList.setOnGroupClickListener(this);
         mDrawerList.setOnChildClickListener(this);
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // enable ActionBar app icon to behave as action to toggle nav drawer
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+       // getSupportActionBar().setIcon();
+    toolbar.setLogo(R.drawable.ic_launcher);
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                toolbar, /*R.drawable.ic_drawer,  nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -402,8 +412,15 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
             inflater.inflate(R.menu.menu, menu);
             MenuItem searchItem = menu.findItem(R.id.recherche);
             SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            editRecherche = (SearchView) searchItem.getActionView();
-            editRecherche.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+
+            //ComponentName cn = new ComponentName(this, MenuActivity.class);
+
+           // editRecherche = (SearchView) searchItem.getActionView();
+            editRecherche = (SearchView) menu.findItem(R.id.recherche).getActionView();
+//            editRecherche.setSearchableInfo(manager.getSearchableInfo(cn));
+//            editRecherche.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+           // SearchableInfo searchableInfo = manager.getSearchableInfo(getComponentName());
+                editRecherche.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
             editRecherche.setOnQueryTextListener(this);
             editRecherche.setOnCloseListener(this);
             if (isAlwaysExpanded()) {
@@ -423,8 +440,10 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
             fragment = new MapsFragment();
         }
         else if (position == 2)
-            fragment = new ParamFragment();
+            fragment = new LinkFragment();
         else if (position == 3)
+            fragment = new ParamFragment();
+        else if (position == 4)
             fragment = new ContactFragment();
         else
             fragment = new MapsFragment();
@@ -438,7 +457,7 @@ public class MenuActivity extends FragmentActivity implements LieuAdapterListene
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
     }
 
     /**

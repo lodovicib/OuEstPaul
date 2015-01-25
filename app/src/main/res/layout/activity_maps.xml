@@ -13,7 +13,7 @@
         android:text="Y aller"
         android:id="@+id/button_carte"
         android:textStyle="bold"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+
         android:background="#fff0a464"
         android:minWidth="100dp"
         android:gravity="center_vertical|center_horizontal"
@@ -21,7 +21,8 @@
         android:clickable="true"
 
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textColor="#fffefefe" />
 
     <!--     <TextView
             android:id="@+id/header"

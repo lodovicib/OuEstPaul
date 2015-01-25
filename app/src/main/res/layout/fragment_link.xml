@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    tools:context=".LinkFragment"
+    android:background="#32292a"
+    >
+
+    <ImageView
+        android:layout_width="178dp"
+        android:layout_height="56dp"
+        android:id="@+id/imgUps"
+        android:src="@drawable/ups"
+        android:layout_below="@+id/textView9"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="178dp"
+        android:layout_height="56dp"
+        android:id="@+id/neocampus"
+        android:src="@drawable/neocampus"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/textView10"
+        android:layout_alignStart="@+id/imgUps" />
+
+    <ImageView
+        android:layout_width="178dp"
+        android:layout_height="56dp"
+        android:id="@+id/moodle"
+        android:src="@drawable/moodle"
+        android:layout_below="@+id/textView11"
+        android:layout_alignStart="@+id/neocampus"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Site de l&apos;université Paul-sabatier :"
+        android:id="@+id/textView9"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Site de neocampus :"
+        android:id="@+id/textView10"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/imgUps"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Moodle UPS :"
+        android:id="@+id/textView11"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/neocampus"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Intranet UPS :"
+        android:id="@+id/textView12"
+        android:textColor="#ffffff"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/moodle"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgIntranet"
+        android:layout_below="@+id/textView12"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/intranet" />
+</RelativeLayout>
