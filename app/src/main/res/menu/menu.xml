@@ -22,7 +22,7 @@
       />
 
  <item android:id="@+id/filtre"
-     android:title="Filtre"
+     android:title="Filtre (à venir)"
      android:showAsAction="never"
  />
 

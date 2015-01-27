@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="16px"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".ParamFragment"
@@ -10,14 +11,35 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Autoriser la récupération des données de localisation au sein du campus"
         android:id="@+id/switch1"
-        android:layout_marginTop="40dp"
         android:checked="false"
         android:clickable="true"
         android:textColor="#ffffffff"
+        style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title"
+        android:layout_below="@+id/textView15"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Autoriser la récupération des données de localisation au sein du campus"
+        android:id="@+id/textView14"
+        android:textColor="#ffffffff"
+        android:textStyle="bold"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="La récupération est anonyme et permet de réaliser des études sur les flux de déplacements afin de les optimiser"
+        android:id="@+id/textView15"
+        android:layout_below="@+id/textView14"
         android:layout_alignParentStart="true"
-        style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Title" />
+        android:textColor="#ffffffff" />
 
 </RelativeLayout>

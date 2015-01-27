@@ -69,7 +69,7 @@ public class MapsFragment extends Fragment {
           locationManager.removeUpdates(loc.getLocationListener());
       }
 
-  */
+*/
     public MapsFragment() {
         super();
         // Just to be an empty Bundle. You can use this later with getArguments().set...
@@ -139,8 +139,7 @@ public class MapsFragment extends Fragment {
         } catch (InflateException e) {
     /* map is already there, just return view as it is */
         }
-        Lieu resultLieu = (Lieu) getArguments().getSerializable("lieu");
-        ArrayList<Service> resultServices = (ArrayList<Service>) getArguments().getSerializable("listService");
+
         saved = savedInstanceState;
         init_button();
          /* tracking(); */
@@ -151,12 +150,35 @@ public class MapsFragment extends Fragment {
             Log.e("HEY", e.getClass() + " : " + e.getMessage());
         }
         setUpMapIfNeeded();
+        if (getArguments() != null) {
+            Lieu resultLieu = (Lieu) getArguments().getSerializable("lieu");
+            ArrayList<Service> resultServices = (ArrayList<Service>) getArguments().getSerializable("listService");
         /* Vérifie si on doit afficher un marker */
-        if (resultLieu != null)
-            affMarker(resultLieu);
-        else if (resultServices != null)
-            affMarkerServices(resultServices);
+            if (resultLieu != null)
+                affMarker(resultLieu);
+            else if (resultServices != null)
+                affMarkerServices(resultServices);
+        }
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("onpause","onpause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+        Log.e("onResume","onResume");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        setRetainInstance(true);
     }
 
     public void affMarkerServices(ArrayList<Service> resultServices) {

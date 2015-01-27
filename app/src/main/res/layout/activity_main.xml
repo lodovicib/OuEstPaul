@@ -21,6 +21,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         >
       <FrameLayout
           android:id="@+id/content_frame"
@@ -72,7 +73,7 @@
         android:divider="#ff655255"
         android:dividerHeight="1dp"
         android:background="#32292a"
-        android:listSelector="@drawable/select_menu"
+
         android:childDivider="#ff967a7e"
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"

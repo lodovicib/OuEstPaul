@@ -45,6 +45,8 @@ import com.example.clement.ouestpaul.interfaces.LieuAdapterListener;
 import com.example.clement.ouestpaul.lieux.Lieu;
 import com.example.clement.ouestpaul.search.ArrayResultsSearchAdaptater;
 import com.example.clement.ouestpaul.search.RechercheLieu;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,6 +123,7 @@ public class MenuActivity extends ActionBarActivity  implements LieuAdapterListe
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ExpandableListView) findViewById(R.id.expend);
+       // mDrawerList.setSelector( R.drawable.select_menu);
         List<String> asd = Arrays.asList(mPlanetTitles);
         ArrayList<String> array = new ArrayList<String>();
         for(String s : asd){
@@ -235,12 +238,18 @@ public class MenuActivity extends ActionBarActivity  implements LieuAdapterListe
     @Override
     public void onClickNom(Lieu item, int position) {
         onBackPressed();
-        fragment = new MapsFragment();
+
+        fragmentMap = new MapsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("lieu", item);
-        fragment.setArguments(bundle);
+        fragmentMap.setArguments(bundle);
+        //fragmentManager = getSupportFragmentManager();
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.content_frame, fragmentMap);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void onClickFavoris(Lieu item, View rowView) {
@@ -370,12 +379,19 @@ public class MenuActivity extends ActionBarActivity  implements LieuAdapterListe
         view.setSelected(true);
         mDrawerList.setItemChecked(i, true);
         mDrawerLayout.closeDrawer(mDrawerList);
-        fragment = new MapsFragment();
+        fragmentMap = new MapsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("listService", listServices.getListServiceByName(view.getTag().toString()));
-        fragment.setArguments(bundle);
+
+        fragmentMap.setArguments(bundle);
+        //fragmentManager = getSupportFragmentManager();
+
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.content_frame, fragmentMap);
+        transaction.addToBackStack(null);
+        transaction.commit();
         return true;
     }
 
@@ -433,11 +449,13 @@ public class MenuActivity extends ActionBarActivity  implements LieuAdapterListe
         return super.onCreateOptionsMenu(menu);
     }
 
+    FragmentTransaction transaction;
+Fragment fragmentMap = new MapsFragment();
     private void selectItem(int position) {
         pos = position;
         if (position == 0) {
             tracking = parametres.getBoolean("autorizeTracking", true);
-            fragment = new MapsFragment();
+            //fragment = new MapsFragment();
         }
         else if (position == 2)
             fragment = new LinkFragment();
@@ -448,8 +466,15 @@ public class MenuActivity extends ActionBarActivity  implements LieuAdapterListe
         else
             fragment = new MapsFragment();
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        transaction = fragmentManager.beginTransaction();
+if (position == 0)
+    transaction.replace(R.id.content_frame, fragmentMap);
+    else
+        transaction.replace(R.id.content_frame, fragment);
+        transaction.addToBackStack(null);
+                transaction.commit();
         mDrawerList.setItemChecked(position, true);
+
         setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
